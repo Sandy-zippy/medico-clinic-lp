@@ -1,0 +1,21 @@
+<svg class="m8-map" viewBox="12 -2 452 290" role="img" aria-label="Medico builds across British Columbia, including Vancouver Island, and Alberta, with offices in Surrey, Victoria, Calgary and Edmonton">
+        <g class="m8-land">
+          <path class="m8-prov m8-bc" d="M13.3 0 L35.7 24.9 L49.4 12.2 L69.6 10 L86.1 36.3 L109.2 66.9 L131.6 88.5 L139.9 92.8 L140.3 106.8 L138.5 118.2 L149.8 132.7 L159.6 140.6 L165.2 158.8 L175 172.4 L179.2 186 L170.8 195 L187.6 208.7 L204.4 215.5 L215.6 224.5 L225.4 233.6 L234.5 241.5 L238.7 249.5 L280 249.5 L280 0 Z"/>
+          <path class="m8-prov m8-ab" d="M280 0 L420 0 L420 249.5 L280 249.5 Z"/>
+          <path class="m8-prov m8-bc m8-isl" d="M159.8 210.5 L173.1 216.4 L188.5 225.5 L201.1 235.7 L212.3 244.7 L222.1 254.9 L226.3 261.8 L222.1 269.0 L215.8 267.4 L211.6 261.8 L201.8 251.5 L190.6 242.5 L178.0 232.3 L162.6 223.2 L149.3 217.5 Z"/>
+        </g>
+        <g class="m8-pins">
+          <g class="m8-pin"><circle class="m8-ring" cx="240.1" cy="245.2" r="7"/><circle class="m8-core" cx="240.1" cy="245.2" r="3.6"/></g>
+          <g class="m8-pin"><circle class="m8-ring" cx="225.5" cy="264.5" r="7"/><circle class="m8-core" cx="225.5" cy="264.5" r="3.6"/></g>
+          <g class="m8-pin"><circle class="m8-ring" cx="363.0" cy="203.0" r="7"/><circle class="m8-core" cx="363.0" cy="203.0" r="3.6"/></g>
+          <g class="m8-pin"><circle class="m8-ring" cx="371.1" cy="146.3" r="7"/><circle class="m8-core" cx="371.1" cy="146.3" r="3.6"/></g>
+        </g>
+        <g class="m8-labels">
+          <text class="m8-city m8-l-surrey" x="227.1" y="249.4" text-anchor="end">Surrey</text>
+          <text class="m8-city m8-l-victoria" x="212.5" y="268.7" text-anchor="end">Victoria</text>
+          <text class="m8-city m8-l-calgary" x="376" y="207">Calgary</text>
+          <text class="m8-city m8-l-edmonton" x="384" y="150">Edmonton</text>
+          <text class="m8-prov-lab" x="138" y="62">BRITISH COLUMBIA</text>
+          <text class="m8-prov-lab" x="352" y="62" text-anchor="middle">ALBERTA</text>
+        </g>
+      </svg>
