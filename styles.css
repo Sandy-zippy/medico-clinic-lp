@@ -46,7 +46,7 @@ p{margin:0}
 :focus-visible{outline:3px solid #7fb6e3;outline-offset:2px}
 
 /* ---------- Header ---------- */
-.top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2)}
+.top{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
 .top .logo img{width:176px;height:auto}
 .top .right{display:flex;align-items:center;gap:22px;font-size:14px;color:var(--muted)}
@@ -57,8 +57,8 @@ p{margin:0}
 
 /* ---------- Hero ---------- */
 .hero{padding:56px 0 72px;background:linear-gradient(180deg,var(--tint),#fff 70%)}
-.hero .grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:56px;align-items:start}
-.hero h1{max-width:15ch}
+.hero .grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,.78fr);gap:48px;align-items:start}
+.hero h1{max-width:18ch;font-size:clamp(34px,3.7vw,52px)}
 .hero .lead{margin-top:20px;font-size:19px;max-width:54ch}
 .offer{margin-top:24px;display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border:1px solid #cfe0f0;
   background:var(--blue-t);border-radius:var(--radius);max-width:560px}
@@ -75,12 +75,13 @@ p{margin:0}
 .proof .bbb{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--ink);color:#fff;font:700 10px/1 var(--h);letter-spacing:.02em}
 .proof .ic{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--blue-t);color:var(--blue)}
 .proof .ic svg{width:17px;height:17px}
-.stack{position:relative;margin-top:84px;margin-right:64px;perspective:1400px}
-.stack{transform-style:preserve-3d;transform:perspective(1400px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s cubic-bezier(.22,1,.36,1)}
-.stack .back{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--radius-l);box-shadow:var(--shadow)}
-.stack .b1{transform:translate3d(34px,-30px,-30px) rotate(2.5deg)}
-.stack .b2{transform:translate3d(66px,-58px,-60px) rotate(5deg);filter:saturate(.85) brightness(1.03)}
-.shot{position:relative;border-radius:var(--radius-l);overflow:hidden;aspect-ratio:16/9;background:#e7edf3;box-shadow:0 18px 40px rgba(30,40,55,.18)}
+.stack{position:relative;margin-top:32px;transform-style:preserve-3d;transform:perspective(1400px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.shot{position:relative;border-radius:var(--radius-l);overflow:hidden;aspect-ratio:2/1;background:#e7edf3;box-shadow:0 18px 40px rgba(30,40,55,.16)}
+.nearq{margin:18px 4px 0;display:grid;grid-template-columns:20px 1fr;gap:4px 12px;font-size:15px;color:var(--ink)}
+.nearq svg{width:20px;height:20px;grid-row:1/3;margin-top:2px}
+.nearq blockquote{margin:0;line-height:1.5}
+.nearq figcaption{font-size:13px;color:var(--muted)}
+.nearq figcaption span{color:#f5a623;letter-spacing:1px}
 .shot img{width:100%;height:100%;object-fit:cover}
 .shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 18px 14px;color:#fff;font-size:14px;
   background:linear-gradient(transparent,rgba(20,26,34,.72))}
@@ -88,7 +89,7 @@ p{margin:0}
 
 /* ---------- Form ---------- */
 .card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:28px}
-.formcard{position:sticky;top:92px}
+.formcard{position:relative}
 .f-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .f-title{font:700 20px/1.3 var(--h);color:var(--ink)}
 .f-count{font-size:14px;color:var(--muted);white-space:nowrap}
@@ -118,6 +119,12 @@ p{margin:0}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fields .full{grid-column:1/-1}
 .field label{display:block;font-size:14px;color:var(--ink);margin-bottom:6px}
+.field label.opt{display:flex;margin-bottom:0}
+.callnote{margin:-6px 0 16px;font-size:14px;color:var(--muted)}
+.notes summary{cursor:pointer;font-size:14px;color:var(--blue);min-height:40px;display:flex;align-items:center;list-style:none}
+.notes summary::-webkit-details-marker{display:none}
+.notes summary span{color:var(--muted);margin-left:4px}
+.notes textarea{margin-top:6px}
 .field label span{color:var(--muted)}
 .field input,.field textarea{width:100%;min-height:48px;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;
   font:400 16px/1.4 var(--b);color:var(--text);background:#fff}
@@ -159,11 +166,11 @@ p{margin:0}
 .quote .who{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
 .quote .who b{display:block;font:700 15px/1.3 var(--h);color:var(--ink)}
 .quote .who svg{flex:none;width:18px;height:18px}
-.quote.g{background:var(--tint)}
-.quote.g .gbig{padding:24px 22px 0;display:flex;align-items:center;gap:12px}
-.quote.g .gbig .n{font:700 44px/1 var(--h);color:var(--ink)}
-.quote.g .gbig .s{color:#f5a623;font-size:20px;letter-spacing:2px}
-.quote.g .gbig small{display:block;font-size:14px;color:var(--muted)}
+.quote .gpanel{aspect-ratio:16/9;display:grid;place-content:center;justify-items:center;gap:6px;background:var(--ink);color:#fff}
+.quote .gpanel svg{width:30px;height:30px;background:#fff;border-radius:50%;padding:4px}
+.quote .gpanel .n{font:700 48px/1 var(--h)}
+.quote .gpanel .s{color:#f5a623;font-size:20px;letter-spacing:3px}
+.quote .gpanel small{font-size:13px;color:#c9ced4;letter-spacing:.04em}
 .bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .bar div{padding:22px 20px;border-left:1px solid var(--line)}
 .bar div:first-child{border-left:0;padding-left:0}
@@ -172,8 +179,11 @@ p{margin:0}
 
 /* ---------- Experience ---------- */
 .exp .grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
-.exp .stat{font:700 clamp(84px,10vw,132px)/.9 var(--h);color:var(--blue);letter-spacing:-.03em;margin:28px 0 6px}
-.exp .statl{font:700 18px/1.3 var(--h);color:var(--ink)}
+.exp .statrow{display:flex;align-items:flex-end;gap:18px;margin-top:32px;padding-top:24px;border-top:3px solid var(--blue);max-width:460px}
+.exp .copy .stat{font:700 clamp(72px,8vw,104px)/.85 var(--h);color:var(--ink);letter-spacing:-.03em;margin:0}
+.exp .copy .statl{font:700 17px/1.35 var(--h);color:var(--ink);margin:0 0 6px;max-width:14ch}
+.sectors{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.sectors li{padding:6px 12px;border:1px solid #c9d8e8;border-radius:999px;font-size:14px;color:var(--ink);background:#fff}
 .exp .copy p{margin-top:18px;color:var(--muted);max-width:56ch}
 .mosaic{display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:repeat(3,1fr);gap:12px;height:540px}
 .mosaic figure{margin:0;position:relative;border-radius:var(--radius);overflow:hidden;background:#e7edf3}
@@ -185,11 +195,14 @@ p{margin:0}
 .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .stage{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);padding:24px;transition:border-color .15s}
 .stage:hover{border-color:#9cc2e3}
-.stage .ill{height:132px;border-radius:var(--radius);background:var(--blue-t);margin-bottom:22px;display:grid;place-items:center}
-.stage .ill svg{width:100%;height:100%}
+.stage .ill{height:176px;margin:-4px -4px 20px;display:grid;place-items:center;perspective:900px}
+.stage .ill svg{width:100%;height:100%;transform-origin:50% 100%}
+.lnk{display:inline-flex;align-items:center;gap:6px;min-height:44px;font:700 16px/1 var(--h);color:var(--blue);text-decoration:none}
+.lnk span{transition:translate .2s var(--xo)}
+.lnk:hover span{translate:4px 0}
 .stage h3{margin-bottom:10px}
 .stage p{font-size:16px;color:var(--muted);flex:1}
-.stage .btn{margin-top:22px;width:100%}
+.stage .lnk{margin-top:14px;align-self:flex-start}
 
 /* ---------- Healthcare is different ---------- */
 .diff .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
@@ -205,13 +218,14 @@ p{margin:0}
 
 /* ---------- Process ---------- */
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:24px;position:relative}
-.steps::before{content:"";position:absolute;left:20px;right:20px;top:20px;height:2px;background:var(--line)}
+.steps::before{content:"";position:absolute;left:20px;right:calc((100% - 96px) / 5 - 20px);top:20px;height:2px;background:var(--blue)}
 .steps li{position:relative}
 .steps .n{display:block;width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;font:700 14px/40px var(--h);text-align:center;margin-bottom:18px;
   box-shadow:0 0 0 6px var(--tint)}
 .steps h3{font-size:19px;margin-bottom:8px}
 .steps p{font-size:15px;color:var(--muted);line-height:1.55}
-.onecall{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size:18px;color:var(--ink);max-width:70ch}
+.onecall{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.onecall p{font-size:19px;color:var(--ink);max-width:62ch}
 
 /* ---------- Portfolio ---------- */
 .pf{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:210px;gap:14px}
@@ -255,7 +269,8 @@ p{margin:0}
 .sheet li:last-child{border-bottom:0}
 .sheet li i{font-style:normal;color:#8a9bb0;font-size:12px;width:22px}
 .sheet li .dots{flex:1;border-bottom:1px dotted #b9c7d6;transform:translateY(-4px)}
-.sheet li .v{color:var(--blue);font-size:17px;letter-spacing:0}
+.sheet li .v{color:var(--ink);font-size:17px;letter-spacing:0}
+.sheet-tb{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 22px;border-top:1px solid #c9d6e3;background:#fff;font:700 10px/1.4 var(--h);letter-spacing:.14em;color:#6f8296}
 .sheet-t{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;background:var(--ink);color:#fff;flex-wrap:wrap}
 .sheet-t .big{font:700 40px/1 var(--h)}
 .sheet-t .big small{font-size:15px;letter-spacing:.14em;margin-left:10px;vertical-align:middle}
@@ -269,8 +284,8 @@ p{margin:0}
 .faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:16px 0;cursor:pointer;
   font:700 18px/1.35 var(--h);color:var(--ink)}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"";flex:none;width:12px;height:12px;border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);transform:rotate(45deg) translateY(-3px);transition:transform .2s}
-.faq details[open] summary::after{transform:rotate(225deg) translateY(-3px)}
+.faq summary::after{content:"";flex:none;width:11px;height:11px;margin:0 4px 5px 0;border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);transform:rotate(45deg);transform-origin:60% 60%;transition:transform .25s var(--xo)}
+.faq details[open] summary::after{transform:rotate(225deg)}
 .faq details p{padding:0 0 20px;color:var(--muted);font-size:17px;max-width:66ch}
 
 /* ---------- Final CTA ---------- */
@@ -323,10 +338,28 @@ p{margin:0}
   .hero .lead{font-size:17px}
   .hero .grid{gap:28px}
   .shot,.stack{display:none}
-  .proof{grid-template-columns:1fr 1fr;max-width:none}
-  .proof li{padding:10px 12px}
-  .proof li:nth-child(3){border-left:0}
-  .proof li:nth-child(n+3){border-top:1px solid var(--line)}
+  /* First screen on a phone must reach the first form answer: the lead line and icon tiles go. */
+  .hero .lead{display:none}
+  .eyebrow{font-size:11px;margin-bottom:10px}
+  .hero h1{font-size:30px}
+  .offer{margin-top:14px;padding:10px 12px}
+  .offer p,.offer b{font-size:15px}
+  .offer svg{display:none}
+  .proof{grid-template-columns:repeat(4,1fr);max-width:none;margin-top:12px}
+  .proof li{padding:8px 6px;flex-direction:column;align-items:flex-start;gap:2px;font-size:11px}
+  .proof li>svg,.proof li>.bbb,.proof li>.ic{display:none}
+  .proof b{font-size:14px}
+  .proof b i{display:none}
+  .nearq{display:none}
+  .formcard .f-top{gap:6px}
+  .step legend{font-size:19px;margin-bottom:12px}
+  .opt{min-height:50px;padding:10px 14px}
+  .stage{display:grid;grid-template-columns:96px 1fr;column-gap:14px;padding:16px}
+  .stage .ill{grid-row:1/4;height:96px;margin:0}
+  .stage h3{margin-bottom:4px}
+  .stage p{font-size:15px}
+  .stage .lnk{margin-top:6px}
+  .exp .statrow{max-width:none}
   .shot-m{display:block}
   .card{padding:20px}
   .opts.two,.fields{grid-template-columns:1fr}
@@ -389,34 +422,42 @@ p{margin:0}
 .anim.loaded [data-in="2"]{transition-delay:.08s}.anim.loaded [data-in="3"]{transition-delay:.16s}
 .anim.loaded [data-in="4"]{transition-delay:.24s}.anim.loaded [data-in="5"]{transition-delay:.32s}
 .anim .stack .shot{opacity:0;rotate:x 14deg;translate:0 40px;transition:opacity .9s var(--xo) .35s,rotate 1.2s var(--xo) .35s,translate 1.2s var(--xo) .35s}
-.anim .stack .back{opacity:0;translate:-24px 22px;transition:opacity .8s var(--xo) .9s,translate 1.1s var(--xo) .9s}
-.anim .stack .b2{translate:-48px 42px;transition-delay:1s}
 .anim.loaded .stack .shot{opacity:1;rotate:x 0deg;translate:0 0}
-.anim.loaded .stack .back{opacity:1;translate:0 0}
 .anim .formcard{opacity:0;rotate:y -10deg;translate:24px 0;transform-origin:right center;transition:opacity .8s var(--xo) .2s,rotate 1s var(--xo) .2s,translate 1s var(--xo) .2s}
 .anim.loaded .formcard{opacity:1;rotate:y 0deg;translate:0 0}
 .opt{transition:border-color .15s,background .15s,scale .15s}
 .opt:active{scale:.985}
 
 /* Reviews: cards flip up from the table, stars fill left to right. */
-.anim [data-anim="rise"]>*{opacity:0;rotate:x 22deg;translate:0 36px;transform-origin:50% 100%;transition:opacity .7s var(--xo),rotate 1s var(--xo),translate 1s var(--xo)}
+.anim [data-anim="rise"]>*{opacity:0;rotate:x 8deg;translate:0 20px;transform-origin:50% 100%;transition:opacity .6s var(--xo),rotate .8s var(--xo),translate .8s var(--xo)}
 .anim [data-anim="rise"].in>*{opacity:1;rotate:x 0deg;translate:0 0}
-.anim [data-anim="rise"].in>:nth-child(2){transition-delay:.12s}.anim [data-anim="rise"].in>:nth-child(3){transition-delay:.24s}
-.anim [data-anim="rise"] .s{clip-path:inset(0 100% 0 0);transition:clip-path .9s var(--xo) .7s;display:inline-block}
-.anim [data-anim="rise"].in .s{clip-path:inset(0 0 0 0)}
+.anim [data-anim="rise"].in>:nth-child(2){transition-delay:.09s}.anim [data-anim="rise"].in>:nth-child(3){transition-delay:.18s}
 
 /* Photo grids: tiles swing open on a vertical hinge, one after another. */
-.anim [data-anim="unfold"]>*{opacity:0;rotate:y -32deg;scale:.94;transform-origin:0 50%;transition:opacity .8s var(--xo),rotate 1.1s var(--xo),scale 1.1s var(--xo)}
-.anim [data-anim="unfold"].in>*{opacity:1;rotate:y 0deg;scale:1}
-.anim [data-anim="unfold"].in>:nth-child(2){transition-delay:.1s}.anim [data-anim="unfold"].in>:nth-child(3){transition-delay:.2s}
-.anim [data-anim="unfold"].in>:nth-child(4){transition-delay:.3s}.anim [data-anim="unfold"].in>:nth-child(5){transition-delay:.4s}
-.anim [data-anim="unfold"].in>:nth-child(6){transition-delay:.5s}
+/* Mosaic: the four photos rise together as one plane, like a board being stood up. */
+.anim [data-anim="plane"]{opacity:0;rotate:x 18deg;translate:0 30px;transform-origin:50% 100%;transition:opacity .7s var(--xo),rotate .9s var(--xo),translate .9s var(--xo)}
+.anim [data-anim="plane"].in{opacity:1;rotate:x 0deg;translate:0 0}
+.anim [data-anim="plane"]>*{opacity:0;transition:opacity .6s var(--xo)}
+.anim [data-anim="plane"].in>*{opacity:1}
+.anim [data-anim="plane"].in>:nth-child(2){transition-delay:.07s}.anim [data-anim="plane"].in>:nth-child(3){transition-delay:.14s}.anim [data-anim="plane"].in>:nth-child(4){transition-delay:.21s}
+/* Portfolio / thank-you tiles: each photo is revealed upward while it settles from a slight zoom. No skew. */
+.anim [data-anim="clip"]>*{clip-path:inset(100% 0 0 0 round var(--radius));transition:clip-path .7s var(--xo)}
+.anim [data-anim="clip"]>* img{scale:1.08;transition:scale 1s var(--xo),transform .5s ease}
+.anim [data-anim="clip"].in>*{clip-path:inset(0 0 0 0 round var(--radius))}
+.anim [data-anim="clip"].in>* img{scale:1}
+.anim [data-anim="clip"].in>:nth-child(2),.anim [data-anim="clip"].in>:nth-child(2) img{transition-delay:.06s}
+.anim [data-anim="clip"].in>:nth-child(3),.anim [data-anim="clip"].in>:nth-child(3) img{transition-delay:.12s}
+.anim [data-anim="clip"].in>:nth-child(4),.anim [data-anim="clip"].in>:nth-child(4) img{transition-delay:.18s}
+.anim [data-anim="clip"].in>:nth-child(5),.anim [data-anim="clip"].in>:nth-child(5) img{transition-delay:.24s}
+.anim [data-anim="clip"].in>:nth-child(6),.anim [data-anim="clip"].in>:nth-child(6) img{transition-delay:.3s}
 .mosaic,.pf{perspective:1400px}
 
 /* Stage cards: rise in; then each drawing acts out its stage. */
 .anim [data-anim="stages"]>*{opacity:0;translate:0 30px;transition:opacity .7s var(--xo),translate .9s var(--xo),transform .35s var(--xo),border-color .15s}
 .anim [data-anim="stages"].in>*{opacity:1;translate:0 0}
 .anim [data-anim="stages"].in>:nth-child(2){transition-delay:.12s,.12s,0s,0s}.anim [data-anim="stages"].in>:nth-child(3){transition-delay:.24s,.24s,0s,0s}
+.anim [data-anim="stages"] .ill svg{opacity:0;rotate:x 55deg;transition:opacity .5s var(--xo) .15s,rotate .9s var(--xo) .15s}
+.anim [data-anim="stages"].in .ill svg{opacity:1;rotate:x 0deg}
 .stage svg .sfill,.stage svg .shole,.stage svg .sring{transform-box:fill-box;transform-origin:50% 100%}
 .anim [data-anim="stages"] .sfill,.anim [data-anim="stages"] .shole{opacity:0;translate:0 -34px;transition:opacity .3s ease .7s,translate .7s var(--xo) .7s}
 .anim [data-anim="stages"].in .sfill,.anim [data-anim="stages"].in .shole{opacity:1;translate:0 0}
@@ -444,7 +485,7 @@ p{margin:0}
 .anim [data-anim="iso"].in .hcall :nth-child(5),.anim [data-anim="iso"].in .hcall :nth-child(6){transition-delay:1.9s}
 .anim [data-anim="iso"].in .hcall :nth-child(7),.anim [data-anim="iso"].in .hcall :nth-child(8){transition-delay:2.1s}
 .anim [data-anim="iso"].in .hcall :nth-child(9),.anim [data-anim="iso"].in .hcall :nth-child(10){transition-delay:2.3s}
-.anim .hflow{animation:flow 1.6s linear infinite}
+.anim [data-anim="iso"].in .hflow{animation:flow 1.6s linear 2.4s 3}
 @keyframes flow{to{stroke-dashoffset:-22}}
 .anim .reqs li{opacity:0;translate:16px 0;transition:opacity .6s var(--xo),translate .8s var(--xo)}
 .anim .reqs.in li{opacity:1;translate:0 0}
@@ -454,7 +495,8 @@ p{margin:0}
 /* Process: the line draws itself and each step lights up as the line reaches it. */
 .anim [data-anim="line"]::before{scale:0 1;transform-origin:0 50%;transition:scale 1.8s cubic-bezier(.65,0,.35,1) .1s}
 .anim [data-anim="line"].in::before{scale:1 1}
-.anim [data-anim="line"] .n{scale:0;transition:scale .5s var(--xo)}
+.anim [data-anim="line"] .n{scale:.6;opacity:0;transition:scale .5s var(--xo),opacity .3s ease}
+.anim [data-anim="line"].in .n{opacity:1}
 .anim [data-anim="line"] li>div{opacity:0;translate:0 10px;transition:opacity .6s var(--xo),translate .7s var(--xo)}
 .anim [data-anim="line"].in .n{scale:1}.anim [data-anim="line"].in li>div{opacity:1;translate:0 0}
 .anim [data-anim="line"].in li:nth-child(1) *{transition-delay:.15s}.anim [data-anim="line"].in li:nth-child(2) *{transition-delay:.5s}
@@ -463,19 +505,19 @@ p{margin:0}
 
 /* Map: tilts up off the table, then the offices drop in and keep a slow pulse. */
 .map{perspective:1400px}
-.anim [data-anim="map"] svg{opacity:0;rotate:x 48deg;transform-origin:50% 100%;transition:opacity .8s var(--xo),rotate 1.4s var(--xo)}
+.anim [data-anim="map"] svg{opacity:0;rotate:x 20deg;transform-origin:50% 100%;transition:opacity .8s var(--xo),rotate 1s var(--xo)}
 .anim [data-anim="map"].in svg{opacity:1;rotate:x 0deg}
 .m-pin circle{transform-box:fill-box;transform-origin:50% 50%}
-.anim [data-anim="map"] .m-pin{opacity:0;translate:0 -40px;transition:opacity .4s ease,translate .7s var(--xo)}
+.anim [data-anim="map"] .m-pin{opacity:0;translate:0 -16px;transition:opacity .4s ease,translate .7s var(--xo)}
 .anim [data-anim="map"].in .m-pin{opacity:1;translate:0 0}
 .anim [data-anim="map"].in .m-pin:nth-of-type(1){transition-delay:1s}.anim [data-anim="map"].in .m-pin:nth-of-type(2){transition-delay:1.15s}
 .anim [data-anim="map"].in .m-pin:nth-of-type(3){transition-delay:1.3s}.anim [data-anim="map"].in .m-pin:nth-of-type(4){transition-delay:1.45s}
-.anim [data-anim="map"].in .m-halo{animation:pulse 2.6s ease-out 2s infinite}
+.anim [data-anim="map"].in .m-halo{animation:pulse 1.2s ease-out 1.8s 2}
 @keyframes pulse{0%{scale:1;opacity:1}100%{scale:2.4;opacity:0}}
 
 /* $0 sheet: stands up off the desk, then each line item is written in. */
 .fee .grid>div:last-child{perspective:1400px}
-.anim [data-anim="sheet"] .sheet{opacity:0;rotate:x 62deg;translate:0 40px;transform-origin:50% 100%;transition:opacity .7s var(--xo),rotate 1.3s var(--xo),translate 1.3s var(--xo)}
+.anim [data-anim="sheet"] .sheet{opacity:0;rotate:x 24deg;translate:0 30px;transform-origin:50% 100%;transition:opacity .7s var(--xo),rotate 1.3s var(--xo),translate 1.3s var(--xo)}
 .anim [data-anim="sheet"].in .sheet{opacity:1;rotate:x 0deg;translate:0 0}
 .anim [data-anim="sheet"] li,.anim [data-anim="sheet"] .sheet-t{opacity:0;translate:-12px 0;transition:opacity .5s var(--xo),translate .6s var(--xo)}
 .anim [data-anim="sheet"].in li,.anim [data-anim="sheet"].in .sheet-t{opacity:1;translate:0 0}

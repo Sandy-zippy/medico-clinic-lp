@@ -5,7 +5,7 @@ here = pathlib.Path(__file__).parent
 d = json.load(open(here / "canada.geojson"))
 PROV = {f["properties"]["name"]: f["geometry"] for f in d["features"]}
 # source: medicoconstruction.com/contact-us/ (verified 24 Sep 2026). Coordinates are the city centres.
-OFFICES = [("Surrey", 49.19, -122.85, "l"), ("Victoria", 48.43, -123.37, "l"),
+OFFICES = [("Surrey", 49.19, -122.85, "r"), ("Victoria", 48.43, -123.37, "l"),
            ("Calgary", 51.05, -114.07, "l"), ("Edmonton", 53.54, -113.30, "l")]
 LON0, LON1, LAT0, LAT1 = -134.2, -109.7, 48.1, 60.1
 W = 900; k = math.cos(math.radians(54))

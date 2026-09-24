@@ -21,6 +21,43 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   }
 })();
 
+// 1b. Keyword variants. The Google ad groups link to ?v=medical|dental|optometry|pharmacy (campaign spec v3).
+// Each swaps the words a searcher typed into the hero, the section 5 headline and the cost question, shows a
+// real project of that type, and pre-selects the clinic type. Unknown or missing ?v= stays medical.
+const VARIANTS = {
+  dental: { title: "Dental Office Construction in BC & Alberta | Medico Construction & Design",
+    eyebrow: "Dental clinic design + construction | BC & Alberta",
+    h1: "Build your dental office with a team that specializes in healthcare.",
+    img: ["assets/img/hero-dental.webp", "", 1024, 683], alt: "Operatory at Chilliwack Dental, built by Medico",
+    cap: "<b>Chilliwack Dental</b> · Chilliwack, BC · Dental clinic",
+    diff: "A dental office isn't a standard commercial build.", faq1: "How much does it cost to build a dental office?", type: "Dental" },
+  optometry: { title: "Optometry Clinic Construction in BC & Alberta | Medico Construction & Design",
+    eyebrow: "Optometry clinic design + construction | BC & Alberta",
+    h1: "Build your optometry clinic with a team that specializes in healthcare.",
+    img: ["assets/img/hero-optometry.webp", "assets/img/hero-optometry-960.webp 960w, assets/img/hero-optometry.webp 1600w", 1600, 1066],
+    alt: "Reception at White Rock Optometry, built by Medico", cap: "<b>White Rock Optometry</b> · White Rock, BC · Optometry clinic",
+    diff: "An optometry clinic isn't a standard commercial build.", faq1: "How much does it cost to build an optometry clinic?", type: "Optometry / Eye care" },
+  pharmacy: { title: "Pharmacy Construction in BC & Alberta | Medico Construction & Design",
+    eyebrow: "Pharmacy design + construction | BC & Alberta",
+    h1: "Build your pharmacy with a team that specializes in healthcare.",
+    img: ["assets/img/hero-pharmacy.webp", "assets/img/hero-pharmacy-960.webp 960w, assets/img/hero-pharmacy.webp 1600w", 1600, 1066],
+    alt: "Aisles at Optima Pharmacy, built by Medico", cap: "<b>Optima Pharmacy</b> · Surrey, BC · Pharmacy",
+    diff: "A pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a pharmacy?", type: "Pharmacy" }
+};
+(function variant() {
+  const key = (new URLSearchParams(location.search).get("v") || "").toLowerCase();
+  const v = VARIANTS[key]; if (!v) return;
+  document.title = v.title;
+  document.documentElement.dataset.variant = key;
+  $("#pagev").value = key;
+  for (const k of ["eyebrow", "h1", "diff", "faq1"]) { const el = $(`[data-v="${k}"]`); if (el) el.textContent = v[k]; }
+  $('[data-v="cap"]').innerHTML = v.cap;
+  const img = $('[data-v="img"]');
+  img.src = v.img[0]; if (v.img[1]) img.srcset = v.img[1]; else img.removeAttribute("srcset");
+  img.width = v.img[2]; img.height = v.img[3]; img.alt = v.alt;
+  const t = $(`input[name="clinic_type"][value="${v.type}"]`); if (t) t.checked = true;
+})();
+
 // 2. The form. One question per step; answers live in the real inputs, so Back never clears anything.
 (function form() {
   const form = $("#lead"), steps = $$(".step", form), bar = $("#fbar"), count = $("#fcount");
@@ -70,6 +107,9 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     // One-tap steps have no Continue: tapping an answer moves on (Sandy, 24 Sep). The button only shows
     // on the contact step, or when the out-of-area note needs reading.
     next.hidden = tapOnly(s) && !outsidePicked(s);
+    // Phones: a taller step can start above the screen after an auto-advance. Bring the card top back.
+    const card = $("#start"), r = card.getBoundingClientRect();
+    if (n > 0 && r.top < 0) scrollTo({ top: scrollY + r.top - 72, behavior: "smooth" });
   }
   const tapOnly = s => !$("input:not([type=radio]),textarea", s);
   const outsidePicked = s => !!$('input[value="Outside BC and Alberta"]:checked', s);
@@ -168,8 +208,10 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 (function sticky() {
   const bar = $("#stick"), target = $("#start");
   if (!bar || !("IntersectionObserver" in window)) return;
-  new IntersectionObserver(([e]) => {
-    const show = !e.isIntersecting && e.boundingClientRect.top < 0;
-    bar.classList.toggle("on", show); document.body.classList.toggle("has-stick", show);
-  }).observe(target);
+  // Shown once the form is above the screen; hidden again while the final call-to-action (which has the
+  // same button) is on screen, so the two never stack.
+  let pastForm = false, finalOn = false;
+  const sync = () => { const show = pastForm && !finalOn; bar.classList.toggle("on", show); document.body.classList.toggle("has-stick", show); };
+  new IntersectionObserver(([e]) => { pastForm = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(target);
+  const fin = $(".final"); if (fin) new IntersectionObserver(([e]) => { finalOn = e.isIntersecting; sync(); }).observe(fin);
 })();

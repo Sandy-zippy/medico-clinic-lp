@@ -75,6 +75,16 @@ qa/motion_test.py must show nothing stranded.
 - thank-you.html: greets by first name, echoes their answers, marks their clinic type, proof strip, what happens next.
   Data passes via sessionStorage (never the URL). Until the form is connected, it shows "Preview: nothing was sent".
 
+## REVIEW PASS, 24 Sep 2026 (independent design critic + CRO auditor). Google-only page (Meta uses its own Instant Form).
+- ?v=medical|dental|optometry|pharmacy variants live (eyebrow, H1, hero photo, section 5 H2, cost FAQ, clinic type preselect).
+- Hero: straight photo (no fanned tilted cards), review quote under the form. Mobile: lead hidden, compact proof row;
+  first form answer ends at 657px on an 844px screen.
+- Motion re-choreographed: mosaic rises as one plane, portfolio/thank-you tiles clip-reveal (no skew), stage drawings
+  stand up, plan-to-isometric stays the signature moment, loops capped, softer map/sheet tilts, jump-scroll safety net.
+- Reviews: 3 identical-structure cards (3rd = Dr. C.Y. homepage quote + Google 5.0 panel). Stage CTAs are text links.
+- Contact step: "A Medico project specialist will call this number" line; notes behind "+ Add project notes".
+- Thank-you: "Have these handy for the call" list. No response time promised (not confirmed by Medico).
+
 ## Interaction
 Allowed: subtle button hover, card border change, smooth accordion, progress animation,
 form selected-state animation, subtle image zoom on portfolio hover.
