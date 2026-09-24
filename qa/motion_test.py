@@ -3,8 +3,8 @@
 import asyncio, pathlib
 from playwright.async_api import async_playwright
 URL = "http://127.0.0.1:8910/index.html"; OUT = pathlib.Path(__file__).parent / "shots"
-HIDDEN = """() => { const bad=[]; document.querySelectorAll('main *, .stack *').forEach(e=>{ const r=e.getBoundingClientRect();
-  if(!r.width||!r.height) return; if(e.closest('[hidden]')||e.closest('.sr')) return;
+HIDDEN = """() => { const bad=[]; document.querySelectorAll('main *, .band *').forEach(e=>{ const r=e.getBoundingClientRect();
+  if(!r.width||!r.height) return; if(e.closest('[hidden]')||e.closest('.sr')||e.closest('.lines')||e.matches('.opt input, .m-halo')) return;  // .lines is the plan overlay, meant to fade out
   const o=+getComputedStyle(e).opacity; if(o<0.99) bad.push((e.className?.baseVal??e.className)+'|'+e.tagName+'|'+o.toFixed(2)); }); return bad.slice(0,15); }"""
 async def main():
     async with async_playwright() as p:
@@ -14,14 +14,14 @@ async def main():
             await pg.goto(URL, wait_until="networkidle")
             await pg.wait_for_timeout(2600)
             await pg.add_style_tag(content="html{scroll-behavior:auto!important}")  # smooth scroll made the probe outrun itself
-            for sel in ["[data-anim]", "[data-count]"]:
+            for sel in ["[data-anim]"]:
                 for el in await pg.query_selector_all(sel):
                     await el.evaluate("e=>e.scrollIntoView({block:'center'})"); await pg.wait_for_timeout(250)
             await pg.wait_for_timeout(3500)
             bad = await pg.evaluate(HIDDEN)
-            cnt = await pg.eval_on_selector("[data-count]", "e=>e.textContent")
+            lines = await pg.eval_on_selector(".band .lines", "e=>getComputedStyle(e).opacity")
             anim = await pg.evaluate("document.documentElement.className")
-            print(w, "html:", anim, "| stranded:", bad or "none", "| counter:", cnt, "| errors:", errs or "none")
+            print(w, "html:", anim, "| stranded:", bad or "none", "| hero linework opacity (want 0):", lines, "| errors:", errs or "none")
         ctx = await b.new_context(reduced_motion="reduce", viewport={"width": 1440, "height": 900}); pg = await ctx.new_page()
         await pg.goto(URL, wait_until="networkidle"); await pg.wait_for_timeout(300)
         print("reduced-motion html:", repr(await pg.evaluate("document.documentElement.className")), "| hidden:", await pg.evaluate(HIDDEN) or "none")

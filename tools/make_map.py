@@ -5,8 +5,10 @@ here = pathlib.Path(__file__).parent
 d = json.load(open(here / "canada.geojson"))
 PROV = {f["properties"]["name"]: f["geometry"] for f in d["features"]}
 # source: medicoconstruction.com/contact-us/ (verified 24 Sep 2026). Coordinates are the city centres.
-OFFICES = [("Surrey", 49.19, -122.85, "r"), ("Victoria", 48.43, -123.37, "l"),
-           ("Calgary", 51.05, -114.07, "l"), ("Edmonton", 53.54, -113.30, "l")]
+# (dx, dy) = label offset from the pin. Surrey and Victoria sit 50 px apart, so their labels are pushed
+# apart and tied back to the pin with a leader line.
+OFFICES = [("Surrey", 49.19, -122.85, (90, -46)), ("Victoria", 48.43, -123.37, (-80, 0)),
+           ("Calgary", 51.05, -114.07, (-22, 0)), ("Edmonton", 53.54, -113.30, (-22, 0))]
 LON0, LON1, LAT0, LAT1 = -134.2, -109.7, 48.1, 60.1
 W = 900; k = math.cos(math.radians(54))
 H = round(W * (LAT1 - LAT0) / ((LON1 - LON0) * k))
@@ -32,11 +34,15 @@ svg.append(f'<path class="m-bc" d="{path(PROV["British Columbia"])}"/>')
 svg.append(f'<path class="m-ab" d="{path(PROV["Alberta"])}"/>')
 bx, by = xy(-124.5, 55.2); ax, ay = xy(-115.2, 56.2)
 svg.append(f'<text class="m-prov" x="{bx:.0f}" y="{by:.0f}">BRITISH COLUMBIA</text><text class="m-prov" x="{ax:.0f}" y="{ay:.0f}" text-anchor="middle">ALBERTA</text>')
-for name, lat, lon, side in OFFICES:
+for name, lat, lon, (dx, dy) in OFFICES:
     x, y = xy(lon, lat)
-    tx, anchor = (x - 22, "end") if side == "l" else (x + 22, "start")
-    svg.append(f'<g class="m-pin"><circle class="m-halo" cx="{x:.1f}" cy="{y:.1f}" r="18"/><circle class="m-dot" cx="{x:.1f}" cy="{y:.1f}" r="8"/>'
-               f'<text x="{tx:.1f}" y="{y+9:.1f}" text-anchor="{anchor}">{name}</text></g>')
+    tx, ty, anchor = x + dx, y + dy, ("end" if dx < 0 else "start")
+    lead = ""
+    if abs(dx) > 30:
+        ex = tx - 6 if dx > 0 else tx + 6
+        lead = f'<path class="m-lead" d="M{x:.1f},{y:.1f}L{ex:.1f},{ty:.1f}"/>'
+    svg.append(f'<g class="m-pin">{lead}<circle class="m-halo" cx="{x:.1f}" cy="{y:.1f}" r="18"/><circle class="m-dot" cx="{x:.1f}" cy="{y:.1f}" r="8"/>'
+               f'<text x="{tx:.1f}" y="{ty+9:.1f}" text-anchor="{anchor}">{name}</text></g>')
 svg.append("</svg>")
 out = here.parent / "assets" / "map.svg"
 out.write_text("".join(svg)); print(out, W, H, out.stat().st_size, "bytes")
