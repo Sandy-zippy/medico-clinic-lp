@@ -70,6 +70,10 @@ qa/motion_test.py must show nothing stranded.
 - Contact step: + "You are the" (Clinic owner / practitioner, Practice manager, Developer / landlord, Other).
 - Phone must be a valid North American number. Hidden fields: lead_grade (A/B/C), seconds_on_form.
 - Still NO budget question (this brief's rule stands).
+- Sandy 24 Sep (later): one-tap steps AUTO-ADVANCE (no Continue; "Outside BC and Alberta" stays to show its note).
+  "Full name" replaces first + last. Clinic types = Medico's own /sectors/ list only (Diagnostic/Imaging removed).
+- thank-you.html: greets by first name, echoes their answers, marks their clinic type, proof strip, what happens next.
+  Data passes via sessionStorage (never the URL). Until the form is connected, it shows "Preview: nothing was sent".
 
 ## Interaction
 Allowed: subtle button hover, card border change, smooth accordion, progress animation,

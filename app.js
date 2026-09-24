@@ -67,13 +67,28 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     const last = i === steps.length - 1;
     next.textContent = last ? "Tell Us About My Clinic" : "Continue";
     next.type = last ? "submit" : "button";
+    // One-tap steps have no Continue: tapping an answer moves on (Sandy, 24 Sep). The button only shows
+    // on the contact step, or when the out-of-area note needs reading.
+    next.hidden = tapOnly(s) && !outsidePicked(s);
   }
+  const tapOnly = s => !$("input:not([type=radio]),textarea", s);
+  const outsidePicked = s => !!$('input[value="Outside BC and Alberta"]:checked', s);
 
-  // Selecting an answer clears the step's error. It does not auto-jump (brief: Continue after selecting).
   form.addEventListener("change", e => {
     if (e.target.type !== "radio") return;
     (e.target.closest(".field") || e.target.closest(".step")).classList.remove("bad");
-    if (e.target.name === "region") $("#outside").hidden = e.target.value !== "Outside BC and Alberta";
+    if (e.target.name === "region") { $("#outside").hidden = !outsidePicked(steps[i]); next.hidden = !outsidePicked(steps[i]); }
+  });
+
+  // Auto-advance on a tap or click of an answer (also re-tapping the answer already chosen after Back).
+  // Keyboard users move with arrows and press Enter, so arrow keys never jump steps.
+  let advancing = null;
+  form.addEventListener("click", e => {
+    const opt = e.target.closest(".opt"); const s = steps[i];
+    if (!opt || !tapOnly(s) || i === steps.length - 1) return;
+    if (opt.querySelector('input[value="Outside BC and Alberta"]')) return;
+    clearTimeout(advancing);
+    advancing = setTimeout(() => { if (stepOk(s, false)) go(i + 1); }, 260);
   });
 
   // Lead grade for the caller's pre-call briefing (never shown to the visitor, never used to block).
@@ -120,12 +135,19 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     data.seconds_on_form = Math.round((Date.now() - t0) / 1000); // under ~8 s is almost always a bot
     data.lead_grade = grade(data);
     form.dataset.grade = data.lead_grade; // exposed for the QA test only
-    if (ENDPOINT.startsWith("TODO")) { msg.textContent = "Preview only: the form is not connected yet, nothing was sent."; return; }
+    // The thank-you page reads these to greet the visitor by name and echo their project back.
+    // sessionStorage, never the URL: a name in a URL leaks into analytics and referrers.
+    const thanks = { name: (data.full_name || "").trim().split(/\s+/)[0], project_type: data.project_type,
+      clinic_type: data.clinic_type, size: data.size, opening: data.opening, region: data.region,
+      preview: ENDPOINT.startsWith("TODO") };
+    const toThanks = () => { try { sessionStorage.setItem("medico_thanks", JSON.stringify(thanks)); } catch (e) {} location.href = "thank-you.html"; };
+    // Not connected yet (Sandy: form destination comes last). Nothing is sent; the thank-you page says so.
+    if (ENDPOINT.startsWith("TODO")) { toThanks(); return; }
     next.disabled = true; next.textContent = "Sending";
     try {
       const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       if (!r.ok) throw new Error(r.status);
-      form.hidden = true; const t = $("#thanks"); t.hidden = false; t.focus();
+      toThanks();
     } catch (err) {
       msg.textContent = "That didn't send. Please try again, or call 604-644-4120.";
       next.disabled = false; next.textContent = "Tell Us About My Clinic";

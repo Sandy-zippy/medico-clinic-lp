@@ -94,11 +94,12 @@
             <label class="opt"><input type="radio" name="clinic_type" value="Specialist Clinic"><span class="tick"></span>Specialist Clinic</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Dental"><span class="tick"></span>Dental</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Optometry / Eye care"><span class="tick"></span>Optometry / Eye care</label>
-            <label class="opt"><input type="radio" name="clinic_type" value="Physiotherapy / Rehabilitation"><span class="tick"></span>Physiotherapy / Rehabilitation</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Pharmacy"><span class="tick"></span>Pharmacy</label>
-            <label class="opt"><input type="radio" name="clinic_type" value="Diagnostic / Imaging"><span class="tick"></span>Diagnostic / Imaging</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Physiotherapy / Chiropractic"><span class="tick"></span>Physiotherapy / Chiropractic</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Veterinary"><span class="tick"></span>Veterinary</label>
-            <label class="opt"><input type="radio" name="clinic_type" value="Wellness / Allied Health"><span class="tick"></span>Wellness / Allied Health</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Med Spa / Aesthetics"><span class="tick"></span>Med Spa / Aesthetics</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Hearing Clinic"><span class="tick"></span>Hearing Clinic</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Wellness / Naturopathy"><span class="tick"></span>Wellness / Naturopathy</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Other"><span class="tick"></span>Other</label>
           </div>
           <p class="step-err">Choose one to continue.</p>
@@ -147,8 +148,7 @@
         <fieldset class="step" hidden>
           <legend>Where should we contact you about the project?</legend>
           <div class="fields">
-            <div class="field"><label for="fn">First name</label><input id="fn" name="first_name" autocomplete="given-name" required><p class="err">Add your first name.</p></div>
-            <div class="field"><label for="ln">Last name</label><input id="ln" name="last_name" autocomplete="family-name" required><p class="err">Add your last name.</p></div>
+            <div class="field full"><label for="nm">Full name</label><input id="nm" name="full_name" autocomplete="name" required><p class="err">Add your name.</p></div>
             <div class="field"><label for="ph">Phone</label><input id="ph" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err">Add a 10-digit phone number.</p></div>
             <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" inputmode="email" autocomplete="email" required><p class="err">Add a valid email.</p></div>
             <div class="field full role"><span class="lab" id="rl">You are the</span>
@@ -170,10 +170,6 @@
         </div>
         <p class="f-msg" id="fmsg" role="alert"></p>
       </form>
-      <div class="thanks" id="thanks" tabindex="-1" hidden>
-        <h3>Thanks. We have your project.</h3>
-        <p>A Medico project specialist will review your details and contact you about the next step.</p>
-      </div>
       <div class="f-foot"><span>Takes about 60 seconds</span><a href="privacy.html">Privacy policy</a></div>
     </div>
   </div>
