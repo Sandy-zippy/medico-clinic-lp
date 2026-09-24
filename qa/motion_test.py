@@ -4,7 +4,7 @@ import asyncio, pathlib
 from playwright.async_api import async_playwright
 URL = "http://127.0.0.1:8910/index.html"; OUT = pathlib.Path(__file__).parent / "shots"
 HIDDEN = """() => { const bad=[]; document.querySelectorAll('main *, .band *').forEach(e=>{ const r=e.getBoundingClientRect();
-  if(!r.width||!r.height) return; if(e.closest('[hidden]')||e.closest('.sr')||e.closest('.lines')||e.matches('.opt input, .m-halo')) return;  // .lines is the plan overlay, meant to fade out
+  if(!r.width||!r.height) return; if(e.closest('[hidden]')||e.closest('.sr')||e.matches('.opt input, .m-halo')) return;
   const o=+getComputedStyle(e).opacity; if(o<0.99) bad.push((e.className?.baseVal??e.className)+'|'+e.tagName+'|'+o.toFixed(2)); }); return bad.slice(0,15); }"""
 async def main():
     async with async_playwright() as p:
@@ -19,9 +19,12 @@ async def main():
                     await el.evaluate("e=>e.scrollIntoView({block:'center'})"); await pg.wait_for_timeout(250)
             await pg.wait_for_timeout(3500)
             bad = await pg.evaluate(HIDDEN)
-            lines = await pg.eval_on_selector(".band .lines", "e=>getComputedStyle(e).opacity")
+            await pg.evaluate("scrollTo(0,0)"); await pg.mouse.move(w*0.2, 200); await pg.wait_for_timeout(700)
+            # the hero photo must sit square with the column after a hover: left edge = text edge, right edge = form edge (desktop)
+            edges = await pg.evaluate("""()=>{const r=s=>document.querySelector(s).getBoundingClientRect(),b=r('.band .shot'),e=r('.hero .eyebrow'),f=r('.formcard');
+              return [Math.round(b.left-e.left), innerWidth>1080 ? Math.round(b.right-f.right) : 0]}""")
             anim = await pg.evaluate("document.documentElement.className")
-            print(w, "html:", anim, "| stranded:", bad or "none", "| hero linework opacity (want 0):", lines, "| errors:", errs or "none")
+            print(w, "html:", anim, "| stranded:", bad or "none", "| hero photo edge offsets (want [0, 0]):", edges, "| errors:", errs or "none")
         ctx = await b.new_context(reduced_motion="reduce", viewport={"width": 1440, "height": 900}); pg = await ctx.new_page()
         await pg.goto(URL, wait_until="networkidle"); await pg.wait_for_timeout(300)
         print("reduced-motion html:", repr(await pg.evaluate("document.documentElement.className")), "| hidden:", await pg.evaluate(HIDDEN) or "none")
