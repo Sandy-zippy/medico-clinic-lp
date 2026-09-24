@@ -126,6 +126,12 @@ p{margin:0}
 .field.bad .err{display:block}
 .step-err{display:none;font-size:14px;color:#b42318;margin-top:10px}
 .step.bad .step-err{display:block}
+.note{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--blue-t);font-size:14px;color:var(--ink)}
+.role .lab{display:block;font-size:14px;color:var(--ink);margin-bottom:6px}
+.opts.chips{grid-template-columns:1fr 1fr;gap:8px}
+.opts.chips .opt{min-height:48px;padding:10px 12px;font-size:14px;gap:10px}
+.opts.chips .tick{width:18px;height:18px}
+.field.role.bad .opt{border-color:#e7a29c}
 .micro{font-size:14px;color:var(--muted);margin-top:14px}
 .f-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 .f-foot a{color:var(--muted)}

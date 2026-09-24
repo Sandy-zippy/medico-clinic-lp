@@ -58,7 +58,7 @@
     </div>
 
     <div class="card formcard" id="start">
-      <div class="f-top"><p class="f-title">Tell us about your clinic</p><p class="f-count" id="fcount" aria-live="polite">Step 1 of 6</p></div>
+      <div class="f-top"><p class="f-title">Tell us about your clinic</p><p class="f-count" id="fcount" aria-live="polite">Step 1 of 7</p></div>
       <div class="f-bar" aria-hidden="true"><i id="fbar"></i></div>
       <form id="lead" novalidate>
         <input type="hidden" name="page" value="medical-clinic">
@@ -93,9 +93,11 @@
             <label class="opt"><input type="radio" name="clinic_type" value="Medical / Family Practice"><span class="tick"></span>Medical / Family Practice</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Specialist Clinic"><span class="tick"></span>Specialist Clinic</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Dental"><span class="tick"></span>Dental</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Optometry / Eye care"><span class="tick"></span>Optometry / Eye care</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Physiotherapy / Rehabilitation"><span class="tick"></span>Physiotherapy / Rehabilitation</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Pharmacy"><span class="tick"></span>Pharmacy</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Diagnostic / Imaging"><span class="tick"></span>Diagnostic / Imaging</label>
+            <label class="opt"><input type="radio" name="clinic_type" value="Veterinary"><span class="tick"></span>Veterinary</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Wellness / Allied Health"><span class="tick"></span>Wellness / Allied Health</label>
             <label class="opt"><input type="radio" name="clinic_type" value="Other"><span class="tick"></span>Other</label>
           </div>
@@ -127,12 +129,35 @@
         </fieldset>
 
         <fieldset class="step" hidden>
+          <legend>Where is the clinic?</legend>
+          <div class="opts two">
+            <label class="opt"><input type="radio" name="region" value="Metro Vancouver"><span class="tick"></span>Metro Vancouver</label>
+            <label class="opt"><input type="radio" name="region" value="Fraser Valley"><span class="tick"></span>Fraser Valley</label>
+            <label class="opt"><input type="radio" name="region" value="Vancouver Island"><span class="tick"></span>Vancouver Island</label>
+            <label class="opt"><input type="radio" name="region" value="Okanagan / Interior BC"><span class="tick"></span>Okanagan / Interior BC</label>
+            <label class="opt"><input type="radio" name="region" value="Calgary area"><span class="tick"></span>Calgary area</label>
+            <label class="opt"><input type="radio" name="region" value="Edmonton area"><span class="tick"></span>Edmonton area</label>
+            <label class="opt"><input type="radio" name="region" value="Elsewhere in BC or Alberta"><span class="tick"></span>Elsewhere in BC or Alberta</label>
+            <label class="opt"><input type="radio" name="region" value="Outside BC and Alberta"><span class="tick"></span>Outside BC and Alberta</label>
+          </div>
+          <p class="note" id="outside" hidden>Medico builds in British Columbia and Alberta. You can still send your details.</p>
+          <p class="step-err">Choose one to continue.</p>
+        </fieldset>
+
+        <fieldset class="step" hidden>
           <legend>Where should we contact you about the project?</legend>
           <div class="fields">
             <div class="field"><label for="fn">First name</label><input id="fn" name="first_name" autocomplete="given-name" required><p class="err">Add your first name.</p></div>
             <div class="field"><label for="ln">Last name</label><input id="ln" name="last_name" autocomplete="family-name" required><p class="err">Add your last name.</p></div>
             <div class="field"><label for="ph">Phone</label><input id="ph" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err">Add a 10-digit phone number.</p></div>
             <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" inputmode="email" autocomplete="email" required><p class="err">Add a valid email.</p></div>
+            <div class="field full role"><span class="lab" id="rl">You are the</span>
+              <div class="opts chips" role="radiogroup" aria-labelledby="rl">
+                <label class="opt"><input type="radio" name="role" value="Clinic owner / practitioner" required><span class="tick"></span>Clinic owner / practitioner</label>
+                <label class="opt"><input type="radio" name="role" value="Practice manager"><span class="tick"></span>Practice manager</label>
+                <label class="opt"><input type="radio" name="role" value="Developer / landlord"><span class="tick"></span>Developer / landlord</label>
+                <label class="opt"><input type="radio" name="role" value="Other"><span class="tick"></span>Other</label>
+              </div><p class="err">Choose one.</p></div>
             <div class="field full"><label for="ci">City</label><input id="ci" name="city" autocomplete="address-level2" required><p class="err">Add the city.</p></div>
             <div class="field full"><label for="no">Project notes <span>(optional)</span></label><textarea id="no" name="notes" rows="3"></textarea></div>
           </div>

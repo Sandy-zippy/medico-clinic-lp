@@ -62,6 +62,15 @@ easing, auto-rotating carousels, video backgrounds, cursor effects, anything tha
 JS or under prefers-reduced-motion. Motion lives in motion.js + the MOTION block of styles.css;
 qa/motion_test.py must show nothing stranded.
 
+## FORM AUDIT, 24 Sep 2026 (Sandy asked for a qualified-leads audit). Changes to the question set above:
+- Q3 clinic type: + Optometry / Eye care, + Veterinary (21 of Medico's 52 portfolio projects; 6 of 49 Meta leads
+  were optometry and would otherwise have picked "Other").
+- NEW step 6 "Where is the clinic?" (region taps incl. "Outside BC and Alberta", which shows a note but still sends).
+  Reason: 21 of 49 Meta leads answered location "Other"; free-text city alone cannot be screened.
+- Contact step: + "You are the" (Clinic owner / practitioner, Practice manager, Developer / landlord, Other).
+- Phone must be a valid North American number. Hidden fields: lead_grade (A/B/C), seconds_on_form.
+- Still NO budget question (this brief's rule stands).
+
 ## Interaction
 Allowed: subtle button hover, card border change, smooth accordion, progress animation,
 form selected-state animation, subtle image zoom on portfolio hover.

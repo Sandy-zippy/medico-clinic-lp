@@ -27,8 +27,11 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const back = $("#fback"), next = $("#fnext"), msg = $("#fmsg");
   let i = 0;
 
+  const t0 = Date.now();
   const emailOk = v => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v.trim());
-  const phoneOk = v => v.replace(/\D/g, "").length >= 10;
+  // North American numbers only (BC/AB clinics): 10 digits after an optional leading 1, area code and
+  // exchange can't start with 0 or 1. Stops "1234567890" style junk.
+  const phoneOk = v => /^1?[2-9]\d{2}[2-9]\d{6}$/.test(v.replace(/\D/g, ""));
   function fieldOk(el) {
     if (!el.required) return true;
     if (el.type === "email") return emailOk(el.value);
@@ -36,14 +39,16 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     return el.value.trim() !== "";
   }
   function stepOk(s, show) {
-    const radios = $$("input[type=radio]", s);
-    if (radios.length) {
-      const ok = radios.some(r => r.checked);
-      if (show) s.classList.toggle("bad", !ok);
-      return ok;
-    }
     let first = null;
-    for (const el of $$("input,textarea", s)) {
+    // Radio groups: a whole-step question (the step shows the error) or a group inside a field (the field does).
+    const groups = [...new Set($$("input[type=radio]", s).map(r => r.name))];
+    for (const name of groups) {
+      const ok = $$(`input[name="${name}"]`, s).some(r => r.checked);
+      const holder = $(`input[name="${name}"]`, s).closest(".field") || s;
+      if (show) holder.classList.toggle("bad", !ok);
+      if (!ok && !first) first = $(`input[name="${name}"]`, s);
+    }
+    for (const el of $$("input:not([type=radio]),textarea", s)) {
       const ok = fieldOk(el);
       if (show) el.closest(".field").classList.toggle("bad", !ok);
       if (!ok && !first) first = el;
@@ -65,7 +70,25 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   }
 
   // Selecting an answer clears the step's error. It does not auto-jump (brief: Continue after selecting).
-  form.addEventListener("change", e => { if (e.target.type === "radio") e.target.closest(".step").classList.remove("bad"); });
+  form.addEventListener("change", e => {
+    if (e.target.type !== "radio") return;
+    (e.target.closest(".field") || e.target.closest(".step")).classList.remove("bad");
+    if (e.target.name === "region") $("#outside").hidden = e.target.value !== "Outside BC and Alberta";
+  });
+
+  // Lead grade for the caller's pre-call briefing (never shown to the visitor, never used to block).
+  // A: in area, has or is negotiating a space, opening within 12 months, decision-maker.
+  // C: outside BC/AB, or no space + no date, or role Other. B: everything else.
+  function grade(d) {
+    const inArea = d.region && d.region !== "Outside BC and Alberta";
+    const space = ["I already have a location", "I'm negotiating a lease or purchase"].includes(d.space_stage);
+    const soon = ["Within 3 months", "3-6 months", "6-12 months"].includes(d.opening);
+    const vague = d.space_stage === "I haven't started looking yet" && ["12+ months", "Not sure yet"].includes(d.opening);
+    const decider = d.role && d.role !== "Other";
+    if (!inArea || vague || d.role === "Other") return "C";
+    if (space && soon && decider) return "A";
+    return "B";
+  }
   // Inline validation on blur, and live once a field has been flagged.
   form.addEventListener("focusout", e => {
     const f = e.target.closest?.(".field"); if (!f || !e.target.value) return;
@@ -79,6 +102,9 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   });
   next.addEventListener("click", e => {
     if (next.type === "submit") return;
+    // go() flips this button to type=submit on the last step. Without preventDefault the SAME click then
+    // submits the empty contact step and paints every field red on arrival.
+    e.preventDefault();
     if (stepOk(steps[i], true)) go(i + 1);
   });
   back.addEventListener("click", () => go(i - 1));
@@ -88,10 +114,13 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     msg.textContent = "";
     if (!stepOk(steps[i], true)) return;
     if (form.website.value) return; // honeypot
-    if (ENDPOINT.startsWith("TODO")) { msg.textContent = "Preview only: the form is not connected yet, nothing was sent."; return; }
     const data = Object.fromEntries(new FormData(form).entries());
     delete data.website;
     data.submitted_at = new Date().toISOString();
+    data.seconds_on_form = Math.round((Date.now() - t0) / 1000); // under ~8 s is almost always a bot
+    data.lead_grade = grade(data);
+    form.dataset.grade = data.lead_grade; // exposed for the QA test only
+    if (ENDPOINT.startsWith("TODO")) { msg.textContent = "Preview only: the form is not connected yet, nothing was sent."; return; }
     next.disabled = true; next.textContent = "Sending";
     try {
       const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
