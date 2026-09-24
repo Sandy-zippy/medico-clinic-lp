@@ -14,6 +14,7 @@ async def main():
         await tap("New clinic"); await pg.wait_for_timeout(500)
         ok((await count()).strip() == "Step 2 of 7", "tapping an answer auto-advances")
         ok(await pg.eval_on_selector_all("input[name=clinic_type]", "e=>e.length") == 11, "11 clinic types")
+        ok(await pg.eval_on_selector_all("#ci, input[name=city]", "e=>e.length") == 0, "no City field (region covers it)")
         for a in ["I already have a location", "Optometry / Eye care", "1,500-3,000 sq. ft.", "3-6 months"]:
             await tap(a); await pg.wait_for_timeout(450)
         ok((await count()).strip() == "Step 6 of 7", "reaches region step by taps alone")
@@ -29,7 +30,7 @@ async def main():
         ok((await count()).strip() == "Step 7 of 7", "re-tapping the kept answer moves forward again")
         await pg.fill("#em", "bad"); await pg.click("#nm")
         ok(await pg.is_visible("#em ~ .err"), "inline email error on blur")
-        await pg.fill("#nm", "Priya Sharma"); await pg.fill("#ph", "123 456 7890"); await pg.fill("#em", "p@example.com"); await pg.fill("#ci", "Calgary")
+        await pg.fill("#nm", "Priya Sharma"); await pg.fill("#ph", "123 456 7890"); await pg.fill("#em", "p@example.com")
         await pg.click("#fnext")
         ok(await pg.is_visible("#ph ~ .err"), "junk phone 123-456-7890 rejected")
         ok(await pg.is_visible(".role .err"), "role required")
@@ -47,7 +48,7 @@ async def main():
         for a in ["Renovation", "I haven't started looking yet", "Dental", "I don't know yet", "Not sure yet"]:
             await tap(a); await pg.wait_for_timeout(450)
         await tap("Outside BC and Alberta"); await pg.click("#fnext"); await pg.wait_for_timeout(300)
-        await pg.fill("#nm", "T L"); await pg.fill("#ph", "416 555 1234"); await pg.fill("#em", "t@example.com"); await pg.fill("#ci", "Toronto")
+        await pg.fill("#nm", "T L"); await pg.fill("#ph", "416 555 1234"); await pg.fill("#em", "t@example.com")
         await pg.click("label.opt:has-text('Practice manager')")
         grade = await pg.evaluate("""() => new Promise(r => { const f=document.getElementById('lead');
           new MutationObserver(()=>r(f.dataset.grade)).observe(f,{attributes:true}); document.getElementById('fnext').click(); })""")

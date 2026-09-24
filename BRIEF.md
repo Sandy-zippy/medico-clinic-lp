@@ -71,7 +71,7 @@ qa/motion_test.py must show nothing stranded.
 - Phone must be a valid North American number. Hidden fields: lead_grade (A/B/C), seconds_on_form.
 - Still NO budget question (this brief's rule stands).
 - Sandy 24 Sep (later): one-tap steps AUTO-ADVANCE (no Continue; "Outside BC and Alberta" stays to show its note).
-  "Full name" replaces first + last. Clinic types = Medico's own /sectors/ list only (Diagnostic/Imaging removed).
+  "Full name" replaces first + last. City field REMOVED (Sandy: region step already covers it). Role stays on the contact step. Clinic types = Medico's own /sectors/ list only (Diagnostic/Imaging removed).
 - thank-you.html: greets by first name, echoes their answers, marks their clinic type, proof strip, what happens next.
   Data passes via sessionStorage (never the URL). Until the form is connected, it shows "Preview: nothing was sent".
 
