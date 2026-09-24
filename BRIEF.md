@@ -55,6 +55,13 @@ Secondary contextual, all scrolling to the SAME form, no separate conversion pat
   Assess My Space · Review My Space · Plan My Clinic · Start My Clinic Plan
 BANNED CTA words: Buy now, Get quote instantly, Book site visit, Get pricing, Submit, Send my project.
 
+## OVERRIDE, Sandy 24 Sep 2026 (later than this brief): ADD 3D MOTION GRAPHICS
+"add 3D motion graphic elements on all the sections where it's applicable so the landing page looks
+dynamic." This replaces the BANNED list below for scroll animation and 3D. Still banned: bounce/elastic
+easing, auto-rotating carousels, video backgrounds, cursor effects, anything that hides content without
+JS or under prefers-reduced-motion. Motion lives in motion.js + the MOTION block of styles.css;
+qa/motion_test.py must show nothing stranded.
+
 ## Interaction
 Allowed: subtle button hover, card border change, smooth accordion, progress animation,
 form selected-state animation, subtle image zoom on portfolio hover.
