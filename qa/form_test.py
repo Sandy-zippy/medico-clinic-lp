@@ -6,6 +6,8 @@ BASE = "http://127.0.0.1:8910/"
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 390, "height": 844})
+        # Never write test leads into the live Sheet/Monday: the Apps Script endpoint is mocked.
+        await pg.route("https://script.google.com/**", lambda r: r.fulfill(status=200, body='{"success":true}', headers={"Access-Control-Allow-Origin": "*"}))
         ok = lambda c, m: print(("PASS " if c else "FAIL ") + m)
         count = lambda: pg.text_content("#fcount")
         tap = lambda a: pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")')
@@ -40,7 +42,7 @@ async def main():
         ok(pg.url.endswith("thank-you.html"), "submit lands on the thank-you page")
         await pg.wait_for_timeout(600)
         ok("Thanks, Priya." in (await pg.text_content("#tyh")), "thank-you greets the visitor by first name")
-        ok(await pg.is_visible("#preview"), "thank-you says nothing was sent (preview)")
+        ok(not await pg.is_visible("#preview"), "connected: thank-you has no preview banner")
         ok("Optometry / Eye care" in (await pg.text_content("#mine")) and "Calgary area" in (await pg.text_content("#mine")), "thank-you echoes their project")
         ok(await pg.eval_on_selector("#types > :first-child", "e=>e.dataset.type") == "optometry", "their clinic type is first and marked")
         # grade C path

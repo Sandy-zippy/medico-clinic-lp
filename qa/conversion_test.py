@@ -1,6 +1,6 @@
 # Google Ads lead conversion: fires once after a successful send, with enhanced-conversion user data; never in preview
-# mode (ENDPOINT still TODO) and never when the send fails. Serve the folder first: python3 -m http.server 8910
-import asyncio
+# mode (ENDPOINT set to TODO...) and never when the send fails. Serve the folder first: python3 -m http.server 8910
+import asyncio, json, re
 from playwright.async_api import async_playwright
 BASE = "http://127.0.0.1:8910/"
 HOOK = "https://hook.test/lead"
@@ -13,12 +13,11 @@ async def run(p, endpoint, status):
     # Record every gtag() call; the real gtag.js is blocked so the 1.2 s fallback redirect is exercised too.
     await pg.add_init_script("window.dataLayer=[];window.dataLayer.push=function(a){try{window.__rec(JSON.parse(JSON.stringify(Array.from(a))))}catch(e){};return Array.prototype.push.call(this,a)}")
     await pg.route("**/googletagmanager.com/**", lambda r: r.abort())
-    if endpoint:
-        async def patch(r):
-            resp = await r.fetch(); body = (await resp.text()).replace('"TODO_LEAD_WEBHOOK"', f'"{endpoint}"')
-            await r.fulfill(response=resp, body=body)
-        await pg.route("**/app.js", patch)
-        await pg.route(HOOK, lambda r: r.fulfill(status=status, body="{}"))
+    async def patch(r):  # swap the live Apps Script URL for a mock (or TODO = preview mode)
+        resp = await r.fetch(); body = re.sub(r'const ENDPOINT = "[^"]*"', f'const ENDPOINT = "{endpoint or "TODO_OFF"}"', await resp.text())
+        await r.fulfill(response=resp, body=body)
+    await pg.route("**/app.js", patch)
+    await pg.route(HOOK, lambda r: r.fulfill(status=status, body=json.dumps({"success": status == 200}), headers={"Access-Control-Allow-Origin": "*"}))
     await pg.goto(BASE + "index.html?gclid=TEST123", wait_until="load")
     tap = lambda a: pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")')
     for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:

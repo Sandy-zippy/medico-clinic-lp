@@ -1,7 +1,7 @@
 // Medico landing page. No dependencies. Jobs: capture click IDs, run the 6-step form, sticky mobile CTA.
 
-// Lead destination is connected LAST, after design sign-off (Sandy, 24 Sep). Until then the form refuses to send.
-const ENDPOINT = "TODO_LEAD_WEBHOOK";
+// Lead destination: Apps Script web app (../leads-backend) -> Sheet + email + Monday. Set "TODO..." to disable sending.
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbx1g_WrKHgaOzbo_6C-hdKMbKo81CJuiCEla1V_m6XKL_YZjwhYQIjCXXA0zledpht5Jw/exec";
 
 const TRACK = ["gclid", "wbraid", "gbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
 const $ = (s, r = document) => r.querySelector(s);
@@ -185,8 +185,9 @@ const VARIANTS = {
     if (ENDPOINT.startsWith("TODO")) { toThanks(); return; }
     next.disabled = true; next.textContent = "Sending";
     try {
-      const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      if (!r.ok) throw new Error(r.status);
+      const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+      // text/plain skips the CORS preflight Apps Script can't answer; the script parses the JSON body itself.
+      if (!r.ok || !(await r.json()).success) throw new Error(r.status);
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
