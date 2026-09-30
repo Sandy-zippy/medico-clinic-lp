@@ -42,7 +42,7 @@ async def main():
         r = [ok(len(c) == 1 and c[0][2]["send_to"] == SEND_TO and c[0][2].get("transaction_id"), "sent: exactly one conversion to the LP lead action"),
              ok(ud and ud[0][2] == {"email": "p@example.com", "phone_number": "+14035551234"}, "sent: enhanced-conversion email + E.164 phone"),
              ok(landed, "sent: lands on thank-you even with gtag.js blocked")]
-        post = [x[1] for x in pushed if x[0] == "post"][0]
+        post = [x[1] for x in pushed if x[:1] == ["post"]][0]
         r.append(ok(post.get("event_id", "").startswith("lead_") and post.get("user_agent") and "fbp" in post,
                     "sent: Meta event_id + match keys go to the server for the CAPI Lead"))
         pushed, landed = await run(p, HOOK, 500)

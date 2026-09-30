@@ -7,21 +7,27 @@ const TRACK = ["gclid", "wbraid", "gbraid", "fbclid", "utm_source", "utm_medium"
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-// 1. Click identifiers. URL wins; sessionStorage keeps them if the visitor navigates back.
+// 1. Click identifiers, last touch wins: a visit that arrives with any click id or UTM replaces what was stored,
+// so a Google lead is never credited to an older Meta click (or the reverse). Kept 90 days in localStorage so a
+// visitor who comes back later still carries the id that Google/Meta need to match the lead.
 (function attribution() {
-  const p = new URLSearchParams(location.search);
+  const p = new URLSearchParams(location.search), DAY = 864e5;
   let stored = {};
-  try { stored = JSON.parse(sessionStorage.getItem("medico_attrib") || "{}"); } catch (e) {}
-  const out = { landing_url: stored.landing_url || location.href, referrer: stored.referrer || document.referrer };
-  for (const k of TRACK) { const v = p.get(k) || stored[k]; if (v) out[k] = v; }
-  try { sessionStorage.setItem("medico_attrib", JSON.stringify(out)); } catch (e) {}
+  try { stored = JSON.parse(localStorage.getItem("medico_attrib") || "{}"); } catch (e) {}
+  if (!stored.t || Date.now() - stored.t > 90 * DAY) stored = {};
+  const fresh = TRACK.some(k => p.get(k));
+  const out = fresh ? { landing_url: location.href, referrer: document.referrer, t: Date.now() }
+    : { landing_url: stored.landing_url || location.href, referrer: stored.referrer || document.referrer, t: stored.t || Date.now() };
+  for (const k of TRACK) { const v = fresh ? p.get(k) : stored[k]; if (v) out[k] = v; }
+  try { localStorage.setItem("medico_attrib", JSON.stringify(out)); } catch (e) {}
   const form = $("#lead");
   for (const [k, v] of Object.entries(out)) {
+    if (k === "t") continue;
     const i = document.createElement("input"); i.type = "hidden"; i.name = k; i.value = v; form.appendChild(i);
   }
 })();
 
-// 1b. Keyword variants. The Google ad groups link to ?v=medical|dental|optometry|pharmacy (campaign spec v3).
+// 1b. Keyword variants. The Google ad groups link to ?v=medical|dental|optometry|pharmacy|vet (campaign spec v3).
 // Each swaps the words a searcher typed into the hero, the section 5 headline and the cost question, shows a
 // real project of that type, and pre-selects the clinic type. Unknown or missing ?v= stays medical.
 const VARIANTS = {
@@ -42,7 +48,13 @@ const VARIANTS = {
     h1: "Build your pharmacy with a team that specializes in healthcare.",
     img: ["assets/img/hero-pharmacy.webp", "assets/img/hero-pharmacy-960.webp 960w, assets/img/hero-pharmacy.webp 1600w", 1600, 1066],
     alt: "Aisles at Optima Pharmacy, built by Medico", cap: "<b>Optima Pharmacy</b> · Surrey, BC · Pharmacy",
-    diff: "A pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a pharmacy?", type: "Pharmacy" }
+    diff: "A pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a pharmacy?", type: "Pharmacy" },
+  vet: { title: "Veterinary Clinic Construction in BC & Alberta | Medico Construction & Design",
+    eyebrow: "Veterinary clinic design + construction | BC & Alberta",
+    h1: "Build your veterinary clinic with a team that specializes in healthcare.",
+    img: ["assets/img/pf-6.webp", "", 800, 533], alt: "Coquitlam Animal Hospital interior, built by Medico",
+    cap: "<b>Coquitlam Animal Hospital</b> · Coquitlam, BC · Veterinary",
+    diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" }
 };
 (function variant() {
   const key = (new URLSearchParams(location.search).get("v") || "").toLowerCase();
@@ -178,6 +190,7 @@ const VARIANTS = {
     data.event_id = "lead_" + data.submitted_at;
     const ck = n => (document.cookie.match("(?:^|; )" + n + "=([^;]*)") || [])[1] || "";
     data.fbp = ck("_fbp");
+    data.gcl_aw = ck("_gcl_aw"); // Google's own click cookie: survives when the gclid URL param is gone
     data.fbc = ck("_fbc") || (data.fbclid ? `fb.1.${Date.now()}.${data.fbclid}` : "");
     data.user_agent = navigator.userAgent;
     form.dataset.grade = data.lead_grade; // exposed for the QA test only
