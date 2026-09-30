@@ -20,6 +20,11 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     : { landing_url: stored.landing_url || location.href, referrer: stored.referrer || document.referrer, t: stored.t || Date.now() };
   for (const k of TRACK) { const v = fresh ? p.get(k) : stored[k]; if (v) out[k] = v; }
   try { localStorage.setItem("medico_attrib", JSON.stringify(out)); } catch (e) {}
+  if (typeof clarity === "function") {  // filter recordings by channel in Clarity
+    clarity("set", "channel", out.gclid || out.wbraid || out.gbraid || out.utm_source === "google" ? "google"
+      : out.fbclid || /facebook|instagram|meta/.test(out.utm_source || "") ? "meta" : out.utm_source || "direct");
+    if (out.utm_id) clarity("set", "campaign_id", out.utm_id);
+  }
   const form = $("#lead");
   for (const [k, v] of Object.entries(out)) {
     if (k === "t") continue;
@@ -211,6 +216,7 @@ const VARIANTS = {
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
       if (typeof fbq === "function") fbq("track", "Lead", {}, { eventID: data.event_id });
+      if (typeof clarity === "function") { clarity("event", "lead"); clarity("set", "lead_grade", data.lead_grade); }
       let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
       if (typeof gtag === "function") {
         const digits = data.phone.replace(/\D/g, "").replace(/^1/, "");

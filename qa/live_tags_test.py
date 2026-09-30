@@ -10,10 +10,12 @@ async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(); pg = await b.new_page()
         tags = {}
-        pg.on("response", lambda res: tags.__setitem__(res.url.split("?")[0], res.status) if "googletagmanager.com/gtag/js" in res.url or "fbevents.js" in res.url else None)
+        pg.on("response", lambda res: tags.__setitem__(res.url.split("?")[0], res.status) if "googletagmanager.com/gtag/js" in res.url or "fbevents.js" in res.url or "clarity.ms/tag" in res.url else None)
         await pg.goto(BASE + "?gclid=TESTGCLID&utm_source=google", wait_until="networkidle"); await pg.wait_for_timeout(2500)
         r.append(ok(any("gtag/js" in u and s == 200 for u, s in tags.items()), f"Google tag loads 200 {tags}"))
         r.append(ok(any("fbevents" in u and s == 200 for u, s in tags.items()), "Meta pixel loads 200"))
+        r.append(ok(any("clarity.ms/tag/yqdd3hg3fm" in u and s == 200 for u, s in tags.items()), "Clarity yqdd3hg3fm loads 200"))
+        r.append(ok(await pg.evaluate("typeof clarity === 'function'"), "clarity() available for tags/events"))
         ck = {c["name"] for c in await pg.context.cookies()}
         r.append(ok("_gcl_aw" in ck, "Google set _gcl_aw from the gclid"))
         r.append(ok("_fbp" in ck, "Meta set _fbp"))
