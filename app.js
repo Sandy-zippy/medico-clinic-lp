@@ -187,7 +187,16 @@ const VARIANTS = {
     try {
       const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       if (!r.ok) throw new Error(r.status);
-      toThanks();
+      // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
+      // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
+      // transaction_id = submit time, so a double submit counts once.
+      let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
+      if (typeof gtag === "function") {
+        const digits = data.phone.replace(/\D/g, "").replace(/^1/, "");
+        gtag("set", "user_data", { email: data.email.trim().toLowerCase(), phone_number: "+1" + digits });
+        gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: data.submitted_at, event_callback: go2 });
+      }
+      setTimeout(go2, 1200); // ad blockers never call back
     } catch (err) {
       msg.textContent = "That didn't send. Please try again, or call 604-644-4120.";
       next.disabled = false; next.textContent = "Tell Us About My Clinic";
