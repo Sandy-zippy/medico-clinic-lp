@@ -17,7 +17,11 @@ async def run(p, endpoint, status):
         resp = await r.fetch(); body = re.sub(r'const ENDPOINT = "[^"]*"', f'const ENDPOINT = "{endpoint or "TODO_OFF"}"', await resp.text())
         await r.fulfill(response=resp, body=body)
     await pg.route("**/app.js", patch)
-    await pg.route(HOOK, lambda r: r.fulfill(status=status, body=json.dumps({"success": status == 200}), headers={"Access-Control-Allow-Origin": "*"}))
+    await pg.route("**/connect.facebook.net/**", lambda r: r.abort())
+    async def hook(r):
+        pushed.append(["post", json.loads(r.request.post_data or "{}")])
+        await r.fulfill(status=status, body=json.dumps({"success": status == 200}), headers={"Access-Control-Allow-Origin": "*"})
+    await pg.route(HOOK, hook)
     await pg.goto(BASE + "index.html?gclid=TEST123", wait_until="load")
     tap = lambda a: pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")')
     for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:
@@ -38,6 +42,9 @@ async def main():
         r = [ok(len(c) == 1 and c[0][2]["send_to"] == SEND_TO and c[0][2].get("transaction_id"), "sent: exactly one conversion to the LP lead action"),
              ok(ud and ud[0][2] == {"email": "p@example.com", "phone_number": "+14035551234"}, "sent: enhanced-conversion email + E.164 phone"),
              ok(landed, "sent: lands on thank-you even with gtag.js blocked")]
+        post = [x[1] for x in pushed if x[0] == "post"][0]
+        r.append(ok(post.get("event_id", "").startswith("lead_") and post.get("user_agent") and "fbp" in post,
+                    "sent: Meta event_id + match keys go to the server for the CAPI Lead"))
         pushed, landed = await run(p, HOOK, 500)
         r.append(ok(not conv(pushed) and not landed, "send fails: no conversion, stays on the form"))
         pushed, landed = await run(p, None, 200)

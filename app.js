@@ -174,6 +174,12 @@ const VARIANTS = {
     data.submitted_at = new Date().toISOString();
     data.seconds_on_form = Math.round((Date.now() - t0) / 1000); // under ~8 s is almost always a bot
     data.lead_grade = grade(data);
+    // Meta dedup + match keys for the server-side Lead event. event_id is shared with the browser fbq Lead below.
+    data.event_id = "lead_" + data.submitted_at;
+    const ck = n => (document.cookie.match("(?:^|; )" + n + "=([^;]*)") || [])[1] || "";
+    data.fbp = ck("_fbp");
+    data.fbc = ck("_fbc") || (data.fbclid ? `fb.1.${Date.now()}.${data.fbclid}` : "");
+    data.user_agent = navigator.userAgent;
     form.dataset.grade = data.lead_grade; // exposed for the QA test only
     // The thank-you page reads these to greet the visitor by name and echo their project back.
     // sessionStorage, never the URL: a name in a URL leaks into analytics and referrers.
@@ -191,6 +197,7 @@ const VARIANTS = {
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
+      if (typeof fbq === "function") fbq("track", "Lead", {}, { eventID: data.event_id });
       let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
       if (typeof gtag === "function") {
         const digits = data.phone.replace(/\D/g, "").replace(/^1/, "");
