@@ -16,9 +16,11 @@ async def main():
         r.append(ok(any("fbevents" in u and s == 200 for u, s in tags.items()), "Meta pixel loads 200"))
         r.append(ok(any("clarity.ms/tag/yqdd3hg3fm" in u and s == 200 for u, s in tags.items()), "Clarity yqdd3hg3fm loads 200"))
         r.append(ok(await pg.evaluate("typeof clarity === 'function'"), "clarity() available for tags/events"))
+        r.append(ok(await pg.evaluate("[...dataLayer].some(a => a[0] === 'config' && a[1] === 'G-HSJ06CG134')"), "GA4 G-HSJ06CG134 configured"))
         ck = {c["name"] for c in await pg.context.cookies()}
         r.append(ok("_gcl_aw" in ck, "Google set _gcl_aw from the gclid"))
         r.append(ok("_fbp" in ck, "Meta set _fbp"))
+        r.append(ok("_ga" in ck, "GA4 set _ga"))
         for v, word in [("dental", "dental"), ("optometry", "optometry"), ("pharmacy", "pharmacy"), ("vet", "veterinary"), ("medical", "medical")]:
             await pg.goto(BASE + f"?v={v}", wait_until="domcontentloaded"); await pg.wait_for_timeout(600)
             r.append(ok(word in (await pg.text_content("h1")).lower(), f"?v={v} H1 says {word}"))

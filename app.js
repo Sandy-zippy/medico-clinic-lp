@@ -222,6 +222,7 @@ const VARIANTS = {
         const digits = data.phone.replace(/\D/g, "").replace(/^1/, "");
         gtag("set", "user_data", { email: data.email.trim().toLowerCase(), phone_number: "+1" + digits });
         gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: data.submitted_at, event_callback: go2 });
+        gtag("event", "generate_lead", { send_to: "G-HSJ06CG134", lead_grade: data.lead_grade, clinic_type: data.clinic_type, region: data.region });
       }
       setTimeout(go2, 1200); // ad blockers never call back
     } catch (err) {
