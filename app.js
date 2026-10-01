@@ -85,7 +85,9 @@ const VARIANTS = {
   const emailOk = v => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v.trim());
   // North American numbers only (BC/AB clinics): 10 digits after an optional leading 1, area code and
   // exchange can't start with 0 or 1. Stops "1234567890" style junk.
-  const phoneOk = v => /^1?[2-9]\d{2}[2-9]\d{6}$/.test(v.replace(/\D/g, ""));
+  // Also rejects one repeated digit and toll-free area codes (1 Oct: "8888888888" got through as an A lead).
+  const phoneOk = v => { const d = v.replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "");
+    return /^[2-9]\d{2}[2-9]\d{6}$/.test(d) && !/^(\d)\1+$/.test(d) && !/^8(00|33|44|55|66|77|88)/.test(d); };
   function fieldOk(el) {
     if (!el.required) return true;
     if (el.type === "email") return emailOk(el.value);
@@ -211,7 +213,10 @@ const VARIANTS = {
     try {
       const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
       // text/plain skips the CORS preflight Apps Script can't answer; the script parses the JSON body itself.
-      if (!r.ok || !(await r.json()).success) throw new Error(r.status);
+      const res = r.ok ? await r.json() : {};
+      if (!res.success) throw new Error(r.status);
+      // Junk the backend caught (fake name/number): saved for review, but never fed to Google or Meta as a conversion.
+      if (res.junk) { toThanks(); return; }
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
