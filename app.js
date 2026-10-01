@@ -61,6 +61,27 @@ const VARIANTS = {
     cap: "<b>Coquitlam Animal Hospital</b> · Coquitlam, BC · Veterinary",
     diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" }
 };
+// Meta angle match (1 Oct 2026, Clarity: 57% of mobile visitors left on the first screen). Every Meta ad landed on the
+// generic "Build your medical clinic" hero, whatever its promise. The ad id arrives as utm_content, so the hero
+// continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: no-cost site
+// assessment, $0 design fees when Medico builds, 100+ clinics.
+const ANGLES = {
+  space: { eyebrow: "Found a space for your clinic? | BC & Alberta", h1: "Check the space before you sign the lease.",
+    offer: "<b>No-cost site assessment.</b> We check plumbing, electrical, room count and permits before you commit. Design fees are $0 when Medico builds." },
+  expand: { eyebrow: "Clinic expansion + renovation | BC & Alberta", h1: "Expanding your clinic? Plan it around your patients.",
+    offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment. Design fees are $0 when Medico builds." },
+  design0: { eyebrow: "Clinic design + construction | BC & Alberta", h1: "Your clinic design is $0 when Medico builds it.",
+    offer: "<b>Layout, permit drawings and construction, one team.</b> Start with a no-cost site assessment of your space." },
+  newclinic: { eyebrow: "Opening a new clinic? | BC & Alberta", h1: "Opening a new clinic? Get the plan right before you build.",
+    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." }
+};
+const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
+  "6920252908279": "newclinic", "6920246652279": "newclinic" };
+(function angle() {
+  const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
+  if (!a || q.get("v")) return;  // a search keyword variant (?v=) wins
+  $('[data-v="eyebrow"]').textContent = a.eyebrow; $('[data-v="h1"]').textContent = a.h1; $('[data-v="offer"]').innerHTML = a.offer;
+})();
 (function variant() {
   const key = (new URLSearchParams(location.search).get("v") || "").toLowerCase();
   const v = VARIANTS[key]; if (!v) return;
