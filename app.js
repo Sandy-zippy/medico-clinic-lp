@@ -76,7 +76,10 @@ const ANGLES = {
     offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." }
 };
 const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
-  "6920252908279": "newclinic", "6920246652279": "newclinic" };
+  "6920252908279": "newclinic", "6920246652279": "newclinic",
+  // 4 Oct province split (cold_bc / cold_ab ad sets), same creatives as above
+  "6921084383679": "space", "6921084405079": "space", "6921084385079": "expand", "6921084408279": "expand",
+  "6921084388079": "design0", "6921084409079": "design0", "6921084391879": "newclinic", "6921084410679": "newclinic" };
 (function angle() {
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || q.get("v")) return;  // a search keyword variant (?v=) wins
