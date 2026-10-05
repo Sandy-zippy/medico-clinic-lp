@@ -244,7 +244,9 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
-      if (typeof fbq === "function") fbq("track", "Lead", {}, { eventID: data.event_id });
+      // Meta's Lead only for visitors Google did not bring, so Meta can't claim a Google lead (5 Oct audit).
+      const fromGoogle = (data.gclid || data.wbraid || data.gbraid || data.utm_source === "google") && !data.fbclid;
+      if (typeof fbq === "function" && !fromGoogle) fbq("track", "Lead", {}, { eventID: data.event_id });
       if (typeof clarity === "function") { clarity("event", "lead"); clarity("set", "lead_grade", data.lead_grade); }
       let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
       if (typeof gtag === "function") {
