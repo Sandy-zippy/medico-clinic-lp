@@ -157,7 +157,15 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
     // Phones: a taller step can start above the screen after an auto-advance. Bring the card top back.
     const card = $("#start"), r = card.getBoundingClientRect();
     if (n > 0 && r.top < 0) scrollTo({ top: scrollY + r.top - 72, behavior: "smooth" });
+    // Form funnel (6 Oct CRO audit: form-start and drop-off step were unmeasured). Once per step reached;
+    // step 2 = answered the first question = form started. Clarity filters sessions by it, GA4 counts it.
+    if (n > 0 && !reached.has(i)) {
+      reached.add(i);
+      if (typeof clarity === "function") clarity("event", `form_step_${i + 1}`);
+      if (typeof gtag === "function") gtag("event", "form_progress", { send_to: "G-HSJ06CG134", step: i + 1 });
+    }
   }
+  const reached = new Set();
   const tapOnly = s => !$("input:not([type=radio]),textarea", s);
   const outsidePicked = s => !!$('input[value="Outside BC and Alberta"]:checked', s);
 
