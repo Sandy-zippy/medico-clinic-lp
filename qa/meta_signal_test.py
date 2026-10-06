@@ -19,9 +19,10 @@ async def run(p, query):
     for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:
         await pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")'); await pg.wait_for_timeout(450)
     await pg.fill("#nm", "Priya Sharma"); await pg.fill("#ph", "(403) 555-1234"); await pg.fill("#em", "p@example.com")
-    await pg.click("label.opt:has-text('Clinic owner')"); await pg.click("#fnext"); await pg.wait_for_timeout(1500)
+    await pg.click("label.opt:has-text('Clinic owner')"); await pg.click("#fnext"); await pg.wait_for_timeout(2500)
     await b.close()
-    return [c for c in calls if c[:2] == ["track", "Lead"]]
+    # Distinct event_ids: the thank-you page repeats the same Lead on purpose (Meta dedups it), 6 Oct.
+    return {(c[3] or {}).get("eventID") for c in calls if c[:2] == ["track", "Lead"]}
 
 async def main():
     async with async_playwright() as p:

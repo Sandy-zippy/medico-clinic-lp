@@ -128,6 +128,12 @@
   </div>
 </footer>
 
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","1088731400165523");fbq("track","PageView");
+// Meta Lead, once per lead, same event_id as the landing page and the server event so Meta counts it once.
+// The landing page can't be relied on: it navigates here before its own pixel request finishes (6 Oct audit).
+(function () { try { var d = JSON.parse(sessionStorage.getItem("medico_thanks") || "{}");
+  if (d.meta_eid && sessionStorage.getItem("medico_lead_fired") !== d.meta_eid) {
+    fbq("track", "Lead", {}, { eventID: d.meta_eid }); sessionStorage.setItem("medico_lead_fired", d.meta_eid); } } catch (e) {} })();</script>
 <script>
 // Personalises from what the form left in sessionStorage. Nothing here is sent anywhere.
 (function () {

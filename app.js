@@ -242,6 +242,11 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
     const thanks = { name: (data.full_name || "").trim().split(/\s+/)[0], project_type: data.project_type,
       clinic_type: data.clinic_type, size: data.size, opening: data.opening, region: data.region,
       preview: ENDPOINT.startsWith("TODO") };
+    // The browser Lead also fires on the thank-you page (same event_id, Meta dedups). 6 Oct audit: the redirect below
+    // left the landing page within ~1 s and cancelled the pixel request on about half the leads, so the browser
+    // event (the one carrying IP, cookies and the click id natively) was missing. Google-click leads never get it.
+    const fromGoogle = (data.gclid || data.wbraid || data.gbraid || data.utm_source === "google") && !data.fbclid;
+    thanks.meta_eid = fromGoogle ? "" : data.event_id;
     const toThanks = () => { try { sessionStorage.setItem("medico_thanks", JSON.stringify(thanks)); } catch (e) {} location.href = "thank-you.html"; };
     // Not connected yet (Sandy: form destination comes last). Nothing is sent; the thank-you page says so.
     if (ENDPOINT.startsWith("TODO")) { toThanks(); return; }
@@ -252,12 +257,11 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
       const res = r.ok ? await r.json() : {};
       if (!res.success) throw new Error(r.status);
       // Junk the backend caught (fake name/number): saved for review, but never fed to Google or Meta as a conversion.
-      if (res.junk) { toThanks(); return; }
+      if (res.junk) { thanks.meta_eid = ""; toThanks(); return; }
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
       // Meta's Lead only for visitors Google did not bring, so Meta can't claim a Google lead (5 Oct audit).
-      const fromGoogle = (data.gclid || data.wbraid || data.gbraid || data.utm_source === "google") && !data.fbclid;
       if (typeof fbq === "function" && !fromGoogle) fbq("track", "Lead", {}, { eventID: data.event_id });
       if (typeof clarity === "function") { clarity("event", "lead"); clarity("set", "lead_grade", data.lead_grade); }
       let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
