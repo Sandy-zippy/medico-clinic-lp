@@ -71,15 +71,19 @@ const ANGLES = {
   expand: { eyebrow: "Clinic expansion + renovation | BC & Alberta", h1: "Expanding your clinic? Plan it around your patients.",
     offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment. Design fees are $0 when Medico builds." },
   design0: { eyebrow: "Clinic design + construction | BC & Alberta", h1: "Your clinic design is $0 when Medico builds it.",
-    offer: "<b>Layout, permit drawings and construction, one team.</b> Start with a no-cost site assessment of your space." },
+    offer: "<b>Layout, permit drawings and construction, planned together.</b> Start with a no-cost site assessment of your space." },
   newclinic: { eyebrow: "Opening a new clinic? | BC & Alberta", h1: "Opening a new clinic? Get the plan right before you build.",
-    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." }
+    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." },
+  plan: { eyebrow: "Still planning your clinic build? | BC & Alberta", h1: "Know what your clinic involves before you build.",
+    offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment. Design fees are $0 when Medico builds." }
 };
 const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
   "6920252908279": "newclinic", "6920246652279": "newclinic",
   // 4 Oct province split (cold_bc / cold_ab ad sets), same creatives as above
   "6921084383679": "space", "6921084405079": "space", "6921084385079": "expand", "6921084408279": "expand",
-  "6921084388079": "design0", "6921084409079": "design0", "6921084391879": "newclinic", "6921084410679": "newclinic" };
+  "6921084388079": "design0", "6921084409079": "design0", "6921084391879": "newclinic", "6921084410679": "newclinic",
+  // 7 Oct Ameya tests
+  "6921574931679": "newclinic", "6921575292079": "plan" };
 (function angle() {
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || q.get("v")) return;  // a search keyword variant (?v=) wins
