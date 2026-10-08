@@ -83,7 +83,8 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   "6921084383679": "space", "6921084405079": "space", "6921084385079": "expand", "6921084408279": "expand",
   "6921084388079": "design0", "6921084409079": "design0", "6921084391879": "newclinic", "6921084410679": "newclinic",
   // 7 Oct Ameya tests
-  "6921574931679": "newclinic", "6921575292079": "plan" };
+  "6921574931679": "newclinic", "6921575292079": "plan",
+  "6921981111079": "plan", "6921981128879": "space" };
 (function angle() {
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || q.get("v")) return;  // a search keyword variant (?v=) wins
