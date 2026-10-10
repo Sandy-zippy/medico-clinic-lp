@@ -262,8 +262,9 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
-      // Meta's Lead only for visitors Google did not bring, so Meta can't claim a Google lead (5 Oct audit).
-      if (typeof fbq === "function" && !fromGoogle) fbq("track", "Lead", {}, { eventID: data.event_id });
+      // Meta's browser Lead fires ONCE, on the thank-you page (meta_eid above; never for Google-click leads).
+      // 10 Oct: firing it here as well made Meta count the 6 Oct lead twice: two browser events with one
+      // event_id are not deduplicated against each other, only browser against server.
       if (typeof clarity === "function") { clarity("event", "lead"); clarity("set", "lead_grade", data.lead_grade); }
       let went = false; const go2 = () => { if (!went) { went = true; toThanks(); } };
       if (typeof gtag === "function") {
