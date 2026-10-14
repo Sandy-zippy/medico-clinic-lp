@@ -272,10 +272,13 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
       if (typeof gtag === "function") {
         const digits = data.phone.replace(/\D/g, "").replace(/^1/, "");
         gtag("set", "user_data", { email: data.email.trim().toLowerCase(), phone_number: "+1" + digits });
-        gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: data.submitted_at, event_callback: go2 });
-        gtag("event", "generate_lead", { send_to: "G-HSJ06CG134", lead_grade: data.lead_grade, clinic_type: data.clinic_type, region: data.region });
+        // 14 Oct: Google missed 1 lead in 4 (8 Oct lead had a gclid, no conversion). beacon keeps the hit alive through
+        // the redirect; the thank-you page re-sends it with the same transaction_id as a backstop (Google counts it once).
+        thanks.gads_tid = data.submitted_at;
+        gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: data.submitted_at, transport_type: "beacon", event_callback: go2 });
+        gtag("event", "generate_lead", { send_to: "G-HSJ06CG134", lead_grade: data.lead_grade, clinic_type: data.clinic_type, region: data.region, transport_type: "beacon" });
       }
-      setTimeout(go2, 1200); // ad blockers never call back
+      setTimeout(go2, 2000); // ad blockers never call back
     } catch (err) {
       msg.textContent = "That didn't send. Please try again, or call 604-644-4120.";
       next.disabled = false; next.textContent = "Tell Us About My Clinic";

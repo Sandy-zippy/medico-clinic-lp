@@ -46,6 +46,15 @@
 <!-- GA4 G-HSJ06CG134 (ZippyScale-owned property "Medico - build.medicoconstruction.com"). Page views only; the lead event fires on the form page. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HSJ06CG134"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-HSJ06CG134");</script>
+<!-- 14 Oct: Google Ads backstop. The form page fires the conversion before redirecting; if that hit was cut off, this
+     re-sends it with the SAME transaction_id, so Google counts the lead once either way. Only for a lead the backend
+     accepted (gads_tid is set after success, never for junk), and only once per tab. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NCTZ3T2L"></script>
+<script>gtag("config","GT-NCTZ3T2L");
+(function () { try { var d = JSON.parse(sessionStorage.getItem("medico_thanks") || "{}");
+  if (d.gads_tid && sessionStorage.getItem("medico_gads_fired") !== d.gads_tid) {
+    gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: d.gads_tid });
+    sessionStorage.setItem("medico_gads_fired", d.gads_tid); } } catch (e) {} })();</script>
 <!-- Microsoft Clarity yqdd3hg3fm: recordings + heatmaps. Sessions tagged by channel; "lead" event on a successful send. -->
 <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","yqdd3hg3fm");</script>
 </head>
