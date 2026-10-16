@@ -5,9 +5,9 @@ here = pathlib.Path(__file__).parent
 d = json.load(open(here / "canada.geojson"))
 PROV = {f["properties"]["name"]: f["geometry"] for f in d["features"]}
 # source: medicoconstruction.com/contact-us/ (verified 24 Sep 2026). Coordinates are the city centres.
-# (dx, dy) = label offset from the pin. Surrey and Victoria sit 50 px apart, so their labels are pushed
+# (dx, dy) = label offset from the pin. Vancouver (Surrey office) and Victoria sit 50 px apart, so their labels are pushed
 # apart and tied back to the pin with a leader line.
-OFFICES = [("Surrey", 49.19, -122.85, (90, -46)), ("Victoria", 48.43, -123.37, (-80, 0)),
+OFFICES = [("Vancouver", 49.19, -122.85, (90, -46)), ("Victoria", 48.43, -123.37, (-80, 0)),
            ("Calgary", 51.05, -114.07, (-22, 0)), ("Edmonton", 53.54, -113.30, (-22, 0))]
 LON0, LON1, LAT0, LAT1 = -134.2, -109.7, 48.1, 60.1
 W = 900; k = math.cos(math.radians(54))
@@ -29,7 +29,7 @@ def path(g, minlen=6):
             if abs(p[0] - keep[-1][0]) + abs(p[1] - keep[-1][1]) > 1.2: keep.append(p)
         out.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in keep) + "Z")
     return "".join(out)
-svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" role="img" aria-label="Map of British Columbia and Alberta with Medico offices in Surrey, Victoria, Calgary and Sherwood Park">']
+svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" role="img" aria-label="Map of British Columbia and Alberta with Medico offices in Vancouver, Victoria, Calgary and Sherwood Park">']
 svg.append(f'<path class="m-bc" d="{path(PROV["British Columbia"])}"/>')
 svg.append(f'<path class="m-ab" d="{path(PROV["Alberta"])}"/>')
 bx, by = xy(-124.5, 55.2); ax, ay = xy(-115.2, 56.2)
