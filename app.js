@@ -89,11 +89,6 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   "6922449404479": "space", "6922449406479": "newclinic", "6922449427079": "space", "6922449446479": "newclinic", "6922449462679": "plan",
   // 20 Oct Ameya creatives (opening/expanding); the 2 drawings ads keep the default hero
   "6924515235479": "newclinic", "6924515274479": "newclinic", "6924515310879": "newclinic", "6924515391679": "newclinic", "6924515495879": "newclinic", "6924515554879": "newclinic" };
-(function angle() {
-  const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
-  if (!a || q.get("v")) return;  // a search keyword variant (?v=) wins
-  $('[data-v="eyebrow"]').textContent = a.eyebrow; $('[data-v="h1"]').textContent = a.h1; $('[data-v="offer"]').innerHTML = a.offer;
-})();
 (function variant() {
   const key = (new URLSearchParams(location.search).get("v") || "").toLowerCase();
   const v = VARIANTS[key]; if (!v) return;
@@ -106,6 +101,16 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   img.src = v.img[0]; if (v.img[1]) img.srcset = v.img[1]; else img.removeAttribute("srcset");
   img.width = v.img[2]; img.height = v.img[3]; img.alt = v.alt;
   const t = $(`input[name="clinic_type"][value="${v.type}"]`); if (t) t.checked = true;
+})();
+
+// Runs after variant(). A Meta angle (from utm_content) never overrides a keyword variant (?v=), but an explicit ?a=
+// does (22 Oct: the Clinic Design search campaign sends ?v=dental&a=design0, so designer-shoppers read "design is $0"
+// over the dental photo and clinic type); the variant keeps its more specific eyebrow.
+(function angle() {
+  const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
+  if (!a || (q.get("v") && !q.get("a"))) return;
+  if (!VARIANTS[(q.get("v") || "").toLowerCase()]) $('[data-v="eyebrow"]').textContent = a.eyebrow;
+  $('[data-v="h1"]').textContent = a.h1; $('[data-v="offer"]').innerHTML = a.offer;
 })();
 
 // 2. The form. One question per step; answers live in the real inputs, so Back never clears anything.
