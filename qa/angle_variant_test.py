@@ -9,6 +9,10 @@ CASES = [  # query, expected h1, expected eyebrow startswith, expected checked c
   ("?v=dental&a=design0&utm_source=google", D0, "Dental clinic design", "Dental"),
   ("?v=medical&a=design0", D0, "Clinic design + construction", None),
   ("?a=design0", D0, "Clinic design + construction", None),
+  ("?v=physio", "Build your physiotherapy clinic with a team that specializes in healthcare.", "Physiotherapy clinic design", "Physiotherapy / Chiropractic"),
+  ("?v=physio&a=design0", D0, "Physiotherapy clinic design", "Physiotherapy / Chiropractic"),
+  ("?v=pharmacy&a=design0", D0, "Pharmacy design", "Pharmacy"),
+  ("?v=vet", "Build your veterinary clinic with a team that specializes in healthcare.", "Veterinary clinic design", "Veterinary"),
   ("?v=dental&utm_content=6920259118079", "Build your dental office with a team that specializes in healthcare.", "Dental clinic design", "Dental"),
   ("?utm_content=6924515235479", "Opening a new clinic? Get the plan right before you build.", "Opening a new clinic?", None)]
 async def main():

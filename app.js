@@ -59,7 +59,12 @@ const VARIANTS = {
     h1: "Build your veterinary clinic with a team that specializes in healthcare.",
     img: ["assets/img/pf-6.webp", "", 800, 533], alt: "Coquitlam Animal Hospital interior, built by Medico",
     cap: "<b>Coquitlam Animal Hospital</b> · Coquitlam, BC · Veterinary",
-    diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" }
+    diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" },
+  // 23 Oct (go B): physio search ad group. No physio project photo cleared, so it keeps the default hero and caption.
+  physio: { title: "Physiotherapy Clinic Construction in BC & Alberta | Medico Construction & Design",
+    eyebrow: "Physiotherapy clinic design + construction | BC & Alberta",
+    h1: "Build your physiotherapy clinic with a team that specializes in healthcare.",
+    diff: "A physiotherapy clinic isn't a standard commercial build.", faq1: "How much does it cost to build a physiotherapy clinic?", type: "Physiotherapy / Chiropractic" }
 };
 // Meta angle match (1 Oct 2026, Clarity: 57% of mobile visitors left on the first screen). Every Meta ad landed on the
 // generic "Build your medical clinic" hero, whatever its promise. The ad id arrives as utm_content, so the hero
@@ -96,6 +101,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   document.documentElement.dataset.variant = key;
   $("#pagev").value = key;
   for (const k of ["eyebrow", "h1", "diff", "faq1"]) { const el = $(`[data-v="${k}"]`); if (el) el.textContent = v[k]; }
+  if (!v.img) { const t = $(`input[name="clinic_type"][value="${v.type}"]`); if (t) t.checked = true; return; }
   $('[data-v="cap"]').innerHTML = v.cap;
   const img = $('[data-v="img"]');
   img.src = v.img[0]; if (v.img[1]) img.srcset = v.img[1]; else img.removeAttribute("srcset");
