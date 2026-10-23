@@ -257,6 +257,15 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
     // event (the one carrying IP, cookies and the click id natively) was missing. Google-click leads never get it.
     const fromGoogle = (data.gclid || data.wbraid || data.gbraid || data.utm_source === "google") && !data.fbclid;
     thanks.meta_eid = fromGoogle ? "" : data.event_id;
+    // Advanced matching for the thank-you Lead (23 Oct audit: Meta credited ~55% of real leads). Hashed here, so only
+    // SHA-256 values sit in sessionStorage; the pixel accepts pre-hashed keys.
+    if (thanks.meta_eid) try {
+      const sha = async s => s ? [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, "0")).join("") : "";
+      const ph = (data.phone || "").replace(/\D/g, ""), nm = (data.full_name || "").trim().toLowerCase().split(/\s+/);
+      thanks.am = { em: await sha((data.email || "").trim().toLowerCase()), ph: await sha(ph.length === 10 ? "1" + ph : ph),
+        fn: await sha(nm[0] || ""), ln: await sha(nm.length > 1 ? nm[nm.length - 1] : ""), country: await sha("ca") };
+      Object.keys(thanks.am).forEach(k => thanks.am[k] || delete thanks.am[k]);
+    } catch (e) {}
     const toThanks = () => { try { sessionStorage.setItem("medico_thanks", JSON.stringify(thanks)); } catch (e) {} location.href = "thank-you.html"; };
     // Not connected yet (Sandy: form destination comes last). Nothing is sent; the thank-you page says so.
     if (ENDPOINT.startsWith("TODO")) { toThanks(); return; }
@@ -267,7 +276,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
       const res = r.ok ? await r.json() : {};
       if (!res.success) throw new Error(r.status);
       // Junk the backend caught (fake name/number): saved for review, but never fed to Google or Meta as a conversion.
-      if (res.junk) { thanks.meta_eid = ""; toThanks(); return; }
+      if (res.junk) { thanks.meta_eid = ""; delete thanks.am; toThanks(); return; }
       // Google Ads lead: fires only after the destination accepted the lead, never on the thank-you pageload
       // (refreshes, direct visits and bots would count). Enhanced conversions: gtag hashes email + phone itself.
       // transaction_id = submit time, so a double submit counts once.
