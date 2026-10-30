@@ -20,9 +20,9 @@ async def main():
             await pg.wait_for_timeout(3500)
             bad = await pg.evaluate(HIDDEN)
             await pg.evaluate("scrollTo(0,0)"); await pg.mouse.move(w*0.2, 200); await pg.wait_for_timeout(700)
-            # the hero photo must sit square with the column after a hover: left edge = text edge, right edge = form edge (desktop)
+            # the hero photo must sit square with the text column after a hover, and (desktop, form beside it since 30 Oct) never run under the form
             edges = await pg.evaluate("""()=>{const r=s=>document.querySelector(s).getBoundingClientRect(),b=r('.band .shot'),e=r('.hero .eyebrow'),f=r('.formcard');
-              return [Math.round(b.left-e.left), innerWidth>1080 ? Math.round(b.right-f.right) : 0]}""")
+              return [Math.round(b.left-e.left), innerWidth>1080 ? Math.max(0,Math.round(b.right-f.left)) : 0]}""")
             anim = await pg.evaluate("document.documentElement.className")
             print(w, "html:", anim, "| stranded:", bad or "none", "| hero photo edge offsets (want [0, 0]):", edges, "| errors:", errs or "none")
         ctx = await b.new_context(reduced_motion="reduce", viewport={"width": 1440, "height": 900}); pg = await ctx.new_page()
