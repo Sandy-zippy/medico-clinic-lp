@@ -20,6 +20,14 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     : { landing_url: stored.landing_url || location.href, referrer: stored.referrer || document.referrer, t: stored.t || Date.now() };
   for (const k of TRACK) { const v = fresh ? p.get(k) : stored[k]; if (v) out[k] = v; }
   try { localStorage.setItem("medico_attrib", JSON.stringify(out)); } catch (e) {}
+  // 30 Oct: share the ad source with medicoconstruction.com, so a visitor who goes on to the main website's
+  // form is still tagged (the WordPress snippet "Medico ad source" reads mc_src). Same rules as the site snippet.
+  if (fresh) {
+    const s = out.gclid || out.wbraid || out.gbraid || out.utm_source === "google" ? "Google Ads"
+      : out.fbclid || /facebook|instagram|meta/.test(out.utm_source || "") ? "Meta ads" : out.utm_source || "Other";
+    const c = { s, c: out.utm_campaign || "", k: out.utm_term || "", l: location.host + location.pathname + location.search.replace(/[?&](gclid|fbclid|wbraid|gbraid)=[^&]*/g, "").slice(0, 120), d: new Date().toISOString().slice(0, 10) };
+    document.cookie = "mc_src=" + encodeURIComponent(JSON.stringify(c)) + ";domain=.medicoconstruction.com;path=/;max-age=7776000;SameSite=Lax;Secure";
+  }
   if (typeof clarity === "function") {  // filter recordings by channel in Clarity
     clarity("set", "channel", out.gclid || out.wbraid || out.gbraid || out.utm_source === "google" ? "google"
       : out.fbclid || /facebook|instagram|meta/.test(out.utm_source || "") ? "meta" : out.utm_source || "direct");
