@@ -24,7 +24,7 @@ async def run(p, endpoint, status):
     await pg.route(HOOK, hook)
     await pg.goto(BASE + "index.html?gclid=TEST123", wait_until="load")
     tap = lambda a: pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")')
-    for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:
+    for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Vancouver Island"]:
         await tap(a); await pg.wait_for_timeout(450)
     await pg.fill("#nm", "Priya Sharma"); await pg.fill("#ph", "(403) 555-1234"); await pg.fill("#em", " P@Example.com ")
     await pg.click("label.opt:has-text('Clinic owner')"); await pg.click("#fnext")

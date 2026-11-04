@@ -44,33 +44,33 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 // Each swaps the words a searcher typed into the hero, the section 5 headline and the cost question, shows a
 // real project of that type, and pre-selects the clinic type. Unknown or missing ?v= stays medical.
 const VARIANTS = {
-  dental: { title: "Dental Office Construction in BC & Alberta | Medico Construction & Design",
-    eyebrow: "Dental clinic design + construction | BC & Alberta",
+  dental: { title: "Dental Office Construction in BC | Medico Construction & Design",
+    eyebrow: "Dental clinic design + construction | British Columbia",
     h1: "Build your dental office with a team that specializes in healthcare.",
     img: ["assets/img/hero-dental.webp", "", 1024, 683], alt: "Operatory at Chilliwack Dental, built by Medico",
     cap: "<b>Chilliwack Dental</b> · Chilliwack, BC · Dental clinic",
     diff: "A dental office isn't a standard commercial build.", faq1: "How much does it cost to build a dental office?", type: "Dental" },
-  optometry: { title: "Optometry Clinic Construction in BC & Alberta | Medico Construction & Design",
-    eyebrow: "Optometry clinic design + construction | BC & Alberta",
+  optometry: { title: "Optometry Clinic Construction in BC | Medico Construction & Design",
+    eyebrow: "Optometry clinic design + construction | British Columbia",
     h1: "Build your optometry clinic with a team that specializes in healthcare.",
     img: ["assets/img/hero-optometry.webp", "assets/img/hero-optometry-960.webp 960w, assets/img/hero-optometry.webp 1600w", 1600, 1066],
     alt: "Reception at White Rock Optometry, built by Medico", cap: "<b>White Rock Optometry</b> · White Rock, BC · Optometry clinic",
     diff: "An optometry clinic isn't a standard commercial build.", faq1: "How much does it cost to build an optometry clinic?", type: "Optometry / Eye care" },
-  pharmacy: { title: "Pharmacy Construction in BC & Alberta | Medico Construction & Design",
-    eyebrow: "Pharmacy design + construction | BC & Alberta",
+  pharmacy: { title: "Pharmacy Construction in BC | Medico Construction & Design",
+    eyebrow: "Pharmacy design + construction | British Columbia",
     h1: "Build your pharmacy with a team that specializes in healthcare.",
     img: ["assets/img/hero-pharmacy.webp", "assets/img/hero-pharmacy-960.webp 960w, assets/img/hero-pharmacy.webp 1600w", 1600, 1066],
     alt: "Aisles at Optima Pharmacy, built by Medico", cap: "<b>Optima Pharmacy</b> · Surrey, BC · Pharmacy",
     diff: "A pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a pharmacy?", type: "Pharmacy" },
-  vet: { title: "Veterinary Clinic Construction in BC & Alberta | Medico Construction & Design",
-    eyebrow: "Veterinary clinic design + construction | BC & Alberta",
+  vet: { title: "Veterinary Clinic Construction in BC | Medico Construction & Design",
+    eyebrow: "Veterinary clinic design + construction | British Columbia",
     h1: "Build your veterinary clinic with a team that specializes in healthcare.",
     img: ["assets/img/pf-6.webp", "", 800, 533], alt: "Coquitlam Animal Hospital interior, built by Medico",
     cap: "<b>Coquitlam Animal Hospital</b> · Coquitlam, BC · Veterinary",
     diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" },
   // 23 Oct (go B): physio search ad group. No physio project photo cleared, so it keeps the default hero and caption.
-  physio: { title: "Physiotherapy Clinic Construction in BC & Alberta | Medico Construction & Design",
-    eyebrow: "Physiotherapy clinic design + construction | BC & Alberta",
+  physio: { title: "Physiotherapy Clinic Construction in BC | Medico Construction & Design",
+    eyebrow: "Physiotherapy clinic design + construction | British Columbia",
     h1: "Build your physiotherapy clinic with a team that specializes in healthcare.",
     diff: "A physiotherapy clinic isn't a standard commercial build.", faq1: "How much does it cost to build a physiotherapy clinic?", type: "Physiotherapy / Chiropractic" }
 };
@@ -79,15 +79,15 @@ const VARIANTS = {
 // continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: no-cost site
 // assessment, $0 design fees when Medico builds, 100+ clinics.
 const ANGLES = {
-  space: { eyebrow: "Found a space for your clinic? | BC & Alberta", h1: "Check the space before you sign the lease.",
+  space: { eyebrow: "Found a space for your clinic? | British Columbia", h1: "Check the space before you sign the lease.",
     offer: "<b>No-cost site assessment.</b> We check plumbing, electrical, room count and permits before you commit. Design fees are $0 when Medico builds." },
-  expand: { eyebrow: "Clinic expansion + renovation | BC & Alberta", h1: "Expanding your clinic? Plan it around your patients.",
+  expand: { eyebrow: "Clinic expansion + renovation | British Columbia", h1: "Expanding your clinic? Plan it around your patients.",
     offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment. Design fees are $0 when Medico builds." },
-  design0: { eyebrow: "Clinic design + construction | BC & Alberta", h1: "Your clinic design is $0 when Medico builds it.",
+  design0: { eyebrow: "Clinic design + construction | British Columbia", h1: "Your clinic design is $0 when Medico builds it.",
     offer: "<b>Layout, permit drawings and construction, planned together.</b> Start with a no-cost site assessment of your space." },
-  newclinic: { eyebrow: "Opening a new clinic? | BC & Alberta", h1: "Opening a new clinic? Get the plan right before you build.",
+  newclinic: { eyebrow: "Opening a new clinic? | British Columbia", h1: "Opening a new clinic? Get the plan right before you build.",
     offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." },
-  plan: { eyebrow: "Still planning your clinic build? | BC & Alberta", h1: "Know what your clinic involves before you build.",
+  plan: { eyebrow: "Still planning your clinic build? | British Columbia", h1: "Know what your clinic involves before you build.",
     offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment. Design fees are $0 when Medico builds." }
 };
 const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
@@ -135,7 +135,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
 
   const t0 = Date.now();
   const emailOk = v => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v.trim());
-  // North American numbers only (BC/AB clinics): 10 digits after an optional leading 1, area code and
+  // North American numbers only (BC clinics): 10 digits after an optional leading 1, area code and
   // exchange can't start with 0 or 1. Stops "1234567890" style junk.
   // Also rejects one repeated digit and toll-free area codes (1 Oct: "8888888888" got through as an A lead).
   const phoneOk = v => { const d = v.replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "");
@@ -191,7 +191,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   }
   const reached = new Set();
   const tapOnly = s => !$("input:not([type=radio]),textarea", s);
-  const outsidePicked = s => !!$('input[value="Outside BC and Alberta"]:checked', s);
+  const outsidePicked = s => !!$('input[value="Outside BC"]:checked', s);
 
   form.addEventListener("change", e => {
     if (e.target.type !== "radio") return;
@@ -205,16 +205,16 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   form.addEventListener("click", e => {
     const opt = e.target.closest(".opt"); const s = steps[i];
     if (!opt || !tapOnly(s) || i === steps.length - 1) return;
-    if (opt.querySelector('input[value="Outside BC and Alberta"]')) return;
+    if (opt.querySelector('input[value="Outside BC"]')) return;
     clearTimeout(advancing);
     advancing = setTimeout(() => { if (stepOk(s, false)) go(i + 1); }, 260);
   });
 
   // Lead grade for the caller's pre-call briefing (never shown to the visitor, never used to block).
   // A: in area, has or is negotiating a space, opening within 12 months, decision-maker.
-  // C: outside BC/AB, or no space + no date, or role Other. B: everything else.
+  // C: outside BC, or no space + no date, or role Other. B: everything else.
   function grade(d) {
-    const inArea = d.region && d.region !== "Outside BC and Alberta";
+    const inArea = d.region && d.region !== "Outside BC";
     const space = ["I already have a location", "I'm negotiating a lease or purchase"].includes(d.space_stage);
     const soon = ["Within 3 months", "3-6 months", "6-12 months"].includes(d.opening);
     const vague = d.space_stage === "I haven't started looking yet" && ["12+ months", "Not sure yet"].includes(d.opening);

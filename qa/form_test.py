@@ -20,15 +20,15 @@ async def main():
         for a in ["I already have a location", "Optometry / Eye care", "1,500-3,000 sq. ft.", "3-6 months"]:
             await tap(a); await pg.wait_for_timeout(450)
         ok((await count()).strip() == "Step 6 of 7", "reaches region step by taps alone")
-        await tap("Outside BC and Alberta"); await pg.wait_for_timeout(450)
+        await tap("Outside BC"); await pg.wait_for_timeout(450)
         ok((await count()).strip() == "Step 6 of 7" and await pg.is_visible("#outside") and await pg.is_visible("#fnext"),
            "out-of-area pick stays put, shows the note and a Continue")
-        await tap("Calgary area"); await pg.wait_for_timeout(450)
+        await tap("Vancouver Island"); await pg.wait_for_timeout(450)
         ok((await count()).strip() == "Step 7 of 7", "in-area pick auto-advances")
         ok(await pg.evaluate("document.querySelectorAll('.step:not([hidden]) .field.bad').length") == 0, "contact step opens with NO red errors")
         await pg.click("#fback"); await pg.wait_for_timeout(200); await pg.click("#fback"); await pg.wait_for_timeout(200)
         ok(await pg.is_checked("input[value='3-6 months']"), "Back keeps the earlier answer")
-        await tap("3-6 months"); await pg.wait_for_timeout(450); await tap("Calgary area"); await pg.wait_for_timeout(450)
+        await tap("3-6 months"); await pg.wait_for_timeout(450); await tap("Vancouver Island"); await pg.wait_for_timeout(450)
         ok((await count()).strip() == "Step 7 of 7", "re-tapping the kept answer moves forward again")
         await pg.fill("#em", "bad"); await pg.click("#nm")
         ok(await pg.is_visible("#em ~ .err"), "inline email error on blur")
@@ -43,13 +43,13 @@ async def main():
         await pg.wait_for_timeout(600)
         ok("Thanks, Priya." in (await pg.text_content("#tyh")), "thank-you greets the visitor by first name")
         ok(not await pg.is_visible("#preview"), "connected: thank-you has no preview banner")
-        ok("Optometry / Eye care" in (await pg.text_content("#mine")) and "Calgary area" in (await pg.text_content("#mine")), "thank-you echoes their project")
+        ok("Optometry / Eye care" in (await pg.text_content("#mine")) and "Vancouver Island" in (await pg.text_content("#mine")), "thank-you echoes their project")
         ok(await pg.eval_on_selector("#types > :first-child", "e=>e.dataset.type") == "optometry", "their clinic type is first and marked")
         # grade C path
         await pg.goto(BASE + "index.html", wait_until="networkidle")
         for a in ["Renovation", "I haven't started looking yet", "Dental", "I don't know yet", "Not sure yet"]:
             await tap(a); await pg.wait_for_timeout(450)
-        await tap("Outside BC and Alberta"); await pg.click("#fnext"); await pg.wait_for_timeout(300)
+        await tap("Outside BC"); await pg.click("#fnext"); await pg.wait_for_timeout(300)
         await pg.fill("#nm", "T L"); await pg.fill("#ph", "416 555 1234"); await pg.fill("#em", "t@example.com")
         await pg.click("label.opt:has-text('Practice manager')")
         grade = await pg.evaluate("""() => new Promise(r => { const f=document.getElementById('lead');

@@ -14,7 +14,7 @@ async def main():
                 await pg.screenshot(path=str(OUT / f"sec_{n}{w}.png"))
         pg = await b.new_page(viewport={"width": 390, "height": 844})
         await pg.goto("http://127.0.0.1:8910/index.html", wait_until="networkidle")
-        for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:
+        for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Vancouver Island"]:
             await pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")', timeout=5000); await pg.wait_for_timeout(450)
         await pg.eval_on_selector("#fnext", "e=>e.scrollIntoView({block:'end'})"); await pg.wait_for_timeout(300)
         await pg.screenshot(path=str(OUT / "sec_laststep390.png"))

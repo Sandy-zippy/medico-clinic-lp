@@ -15,7 +15,7 @@ async def run(p, query, reload=False, eng="chromium"):
     await pg.route("**/app.js", patch)
     await pg.route(HOOK, lambda r: r.fulfill(status=200, body=json.dumps({"success": True})))
     await pg.goto(BASE + "index.html" + query, wait_until="load")
-    for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Calgary area"]:
+    for a in ["New clinic", "I already have a location", "Dental", "1,500-3,000 sq. ft.", "3-6 months", "Vancouver Island"]:
         await pg.click(f'.step:not([hidden]) label.opt:has-text("{a}")'); await pg.wait_for_timeout(450)
     await pg.fill("#nm", "Priya Sharma"); await pg.fill("#ph", "(403) 555-1234"); await pg.fill("#em", "p@example.com")
     await pg.click("label.opt:has-text('Clinic owner')"); await pg.click("#fnext")
