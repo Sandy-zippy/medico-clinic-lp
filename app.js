@@ -95,18 +95,18 @@ const VARIANTS = {
 // Meta angle match (1 Oct 2026, Clarity: 57% of mobile visitors left on the first screen). Every Meta ad landed on the
 // generic "Build your medical clinic" hero, whatever its promise. The ad id arrives as utm_content, so the hero
 // continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: no-cost site
-// assessment, $0 design fees when Medico builds, 100+ clinics.
+// assessment, 100+ clinics. ($0 design fee offer retired by Sandy 9 Nov 2026.)
 const ANGLES = {
   space: { eyebrow: "Found a space for your clinic? | British Columbia", h1: "Check the space before you sign the lease.",
-    offer: "<b>No-cost site assessment.</b> We check plumbing, electrical, room count and permits before you commit. Design fees are $0 when Medico builds." },
+    offer: "<b>No-cost site assessment.</b> We check plumbing, electrical, room count and permits before you commit." },
   expand: { eyebrow: "Clinic expansion + renovation | British Columbia", h1: "Expanding your clinic? Plan it around your patients.",
-    offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment. Design fees are $0 when Medico builds." },
-  design0: { eyebrow: "Clinic design + construction | British Columbia", h1: "Your clinic design is $0 when Medico builds it.",
+    offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment." },
+  design0: { eyebrow: "Clinic design + construction | British Columbia", h1: "Design and build your clinic with one team.",
     offer: "<b>Layout, permit drawings and construction, planned together.</b> Start with a no-cost site assessment of your space." },
   newclinic: { eyebrow: "Opening a new clinic? | British Columbia", h1: "Opening a new clinic? Get the plan right before you build.",
-    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment. Design fees are $0 when Medico builds." },
+    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment." },
   plan: { eyebrow: "Still planning your clinic build? | British Columbia", h1: "Know what your clinic involves before you build.",
-    offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment. Design fees are $0 when Medico builds." }
+    offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment." }
 };
 const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
   "6920252908279": "newclinic", "6920246652279": "newclinic",
