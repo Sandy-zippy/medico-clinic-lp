@@ -47,38 +47,38 @@ const VARIANTS = {
   dental: { title: "Dental Office Construction in BC | Medico Construction & Design",
     eyebrow: "Dental clinic design + construction | British Columbia",
     h1: "Build your dental office with a team that specializes in healthcare.",
-    img: ["assets/img/hero-dental.webp", "", 1024, 683], alt: "Operatory at Chilliwack Dental, built by Medico",
+    img: ["/assets/img/hero-dental.webp", "", 1024, 683], alt: "Operatory at Chilliwack Dental, built by Medico",
     cap: "<b>Chilliwack Dental</b> · Chilliwack, BC · Dental clinic",
     diff: "A dental office isn't a standard commercial build.", faq1: "How much does it cost to build a dental office?", type: "Dental" },
   optometry: { title: "Optometry Clinic Construction in BC | Medico Construction & Design",
     eyebrow: "Optometry clinic design + construction | British Columbia",
     h1: "Build your optometry clinic with a team that specializes in healthcare.",
-    img: ["assets/img/hero-optometry.webp", "assets/img/hero-optometry-960.webp 960w, assets/img/hero-optometry.webp 1600w", 1600, 1066],
+    img: ["/assets/img/hero-optometry.webp", "/assets/img/hero-optometry-960.webp 960w, /assets/img/hero-optometry.webp 1600w", 1600, 1066],
     alt: "Reception at White Rock Optometry, built by Medico", cap: "<b>White Rock Optometry</b> · White Rock, BC · Optometry clinic",
     diff: "An optometry clinic isn't a standard commercial build.", faq1: "How much does it cost to build an optometry clinic?", type: "Optometry / Eye care" },
   pharmacy: { title: "Pharmacy Construction in BC | Medico Construction & Design",
     eyebrow: "Pharmacy design + construction | British Columbia",
     h1: "Build your pharmacy with a team that specializes in healthcare.",
-    img: ["assets/img/hero-pharmacy.webp", "assets/img/hero-pharmacy-960.webp 960w, assets/img/hero-pharmacy.webp 1600w", 1600, 1066],
+    img: ["/assets/img/hero-pharmacy.webp", "/assets/img/hero-pharmacy-960.webp 960w, /assets/img/hero-pharmacy.webp 1600w", 1600, 1066],
     alt: "Aisles at Optima Pharmacy, built by Medico", cap: "<b>Optima Pharmacy</b> · Surrey, BC · Pharmacy",
     diff: "A pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a pharmacy?", type: "Pharmacy" },
   vet: { title: "Veterinary Clinic Construction in BC | Medico Construction & Design",
     eyebrow: "Veterinary clinic design + construction | British Columbia",
     h1: "Build your veterinary clinic with a team that specializes in healthcare.",
-    img: ["assets/img/pf-6.webp", "", 800, 533], alt: "Coquitlam Animal Hospital interior, built by Medico",
+    img: ["/assets/img/pf-6.webp", "", 800, 533], alt: "Coquitlam Animal Hospital interior, built by Medico",
     cap: "<b>Coquitlam Animal Hospital</b> · Coquitlam, BC · Veterinary",
     diff: "A veterinary clinic isn't a standard commercial build.", faq1: "How much does it cost to build a veterinary clinic?", type: "Veterinary" },
   // 4 Nov category expansion (Sandy). Z8000 wording is the live site's own claim (medicoconstruction.com/csa-z8000-standard).
   compounding: { title: "Compounding Pharmacy Construction in BC | Medico Construction & Design",
     eyebrow: "Compounding pharmacy + clean room construction | British Columbia",
     h1: "Build your compounding pharmacy with a team that specializes in healthcare.",
-    img: ["assets/img/hero-compounding.webp", "assets/img/hero-compounding-960.webp 960w, assets/img/hero-compounding.webp 1440w", 1440, 960],
+    img: ["/assets/img/hero-compounding.webp", "/assets/img/hero-compounding-960.webp 960w, /assets/img/hero-compounding.webp 1440w", 1440, 960],
     alt: "Dispensary at Humble Compounding Pharmacy, built by Medico", cap: "<b>Humble Compounding Pharmacy</b> · Langley, BC · 1,600 sq ft",
     diff: "A compounding pharmacy isn't a standard commercial build.", faq1: "How much does it cost to build a compounding pharmacy?", type: "Pharmacy" },
   surgical: { title: "Healthcare Facility Construction to CSA Z8000 in BC | Medico Construction & Design",
     eyebrow: "Surgical + specialty clinic construction to CSA Z8000 | British Columbia",
     h1: "Build your healthcare facility with a contractor that designs to CSA Z8000.",
-    img: ["assets/img/hero-surgical.webp", "assets/img/hero-surgical-960.webp 960w, assets/img/hero-surgical.webp 1440w", 1440, 960],
+    img: ["/assets/img/hero-surgical.webp", "/assets/img/hero-surgical-960.webp 960w, /assets/img/hero-surgical.webp 1440w", 1440, 960],
     alt: "Waiting room at Surrey Ophthalmic Surgeons, built by Medico", cap: "<b>Surrey Ophthalmic Surgeons</b> · White Rock, BC · Surgical clinic",
     diff: "A surgical or specialty facility isn't a standard commercial build.", faq1: "How much does it cost to build a surgical clinic?", type: "Specialist Clinic" },
   // No fertility project yet, so it keeps the default hero and caption (no IVF experience claimed).
@@ -127,12 +127,14 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   // 20 Oct Ameya creatives (opening/expanding); the 2 drawings ads keep the default hero
   "6924515235479": "newclinic", "6924515274479": "newclinic", "6924515310879": "newclinic", "6924515391679": "newclinic", "6924515495879": "newclinic", "6924515554879": "newclinic" };
 (function variant() {
-  const key = (new URLSearchParams(location.search).get("v") || "").toLowerCase();
+  // Google keyword pages (/g/<slug>/, built by tools/gpages.py) carry their own title, eyebrow and h1 in the HTML.
+  const G = document.documentElement.dataset.gv;
+  const key = (G || new URLSearchParams(location.search).get("v") || "").toLowerCase();
   const v = VARIANTS[key]; if (!v) return;
-  document.title = v.title;
+  if (!G) document.title = v.title;
   document.documentElement.dataset.variant = key;
   $("#pagev").value = key;
-  for (const k of ["eyebrow", "h1", "diff", "faq1"]) { const el = $(`[data-v="${k}"]`); if (el) el.textContent = v[k]; }
+  for (const k of G ? ["diff", "faq1"] : ["eyebrow", "h1", "diff", "faq1"]) { const el = $(`[data-v="${k}"]`); if (el) el.textContent = v[k]; }
   if (!v.img) { const t = $(`input[name="clinic_type"][value="${v.type}"]`); if (t) t.checked = true; return; }
   $('[data-v="cap"]').innerHTML = v.cap;
   const img = $('[data-v="img"]');
@@ -145,6 +147,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
 // does (22 Oct: the Clinic Design search campaign sends ?v=dental&a=design0, so designer-shoppers read "design is $0"
 // over the dental photo and clinic type); the variant keeps its more specific eyebrow.
 (function angle() {
+  if (document.documentElement.dataset.gv) return;
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || (q.get("v") && !q.get("a"))) return;
   const vk = (q.get("v") || "").toLowerCase();
@@ -309,7 +312,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
         fn: await sha(nm[0] || ""), ln: await sha(nm.length > 1 ? nm[nm.length - 1] : ""), country: await sha("ca") };
       Object.keys(thanks.am).forEach(k => thanks.am[k] || delete thanks.am[k]);
     } catch (e) {}
-    const toThanks = () => { try { sessionStorage.setItem("medico_thanks", JSON.stringify(thanks)); } catch (e) {} location.href = "thank-you.html"; };
+    const toThanks = () => { try { sessionStorage.setItem("medico_thanks", JSON.stringify(thanks)); } catch (e) {} location.href = "/thank-you.html"; };
     // Not connected yet (Sandy: form destination comes last). Nothing is sent; the thank-you page says so.
     if (ENDPOINT.startsWith("TODO")) { toThanks(); return; }
     next.disabled = true; next.textContent = "Sending";

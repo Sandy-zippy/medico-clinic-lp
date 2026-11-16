@@ -409,6 +409,6 @@
 
 <script src="app.js" defer></script>
 <script src="motion.js" defer></script>
-<script>fetch("assets/map.svg").then(r=>r.text()).then(t=>{document.getElementById("map").innerHTML=t}).catch(()=>{});</script>
+<script>fetch("/assets/map.svg").then(r=>r.text()).then(t=>{document.getElementById("map").innerHTML=t}).catch(()=>{});</script>
 </body>
 </html>
