@@ -108,6 +108,12 @@ const ANGLES = {
   plan: { eyebrow: "Still planning your clinic build? | British Columbia", h1: "Know what your clinic involves before you build.",
     offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment." }
 };
+const DESIGN_HERO = {
+  medical: ["Medical clinic design and build, by one team.", "Medical Clinic Design + Build in BC | Medico Construction & Design"],
+  dental: ["Dental office design and build, by one team.", "Dental Office Design + Build in BC | Medico Construction & Design"],
+  pharmacy: ["Pharmacy and vet clinic design, built by the same team.", "Pharmacy + Vet Clinic Design in BC | Medico Construction & Design"],
+  vet: ["Vet clinic design and build, by one team.", "Veterinary Clinic Design + Build in BC | Medico Construction & Design"]
+};
 const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259118079": "design0", "6920255191679": "design0",
   "6920252908279": "newclinic", "6920246652279": "newclinic",
   // 4 Oct province split (cold_bc / cold_ab ad sets), same creatives as above
@@ -141,8 +147,13 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
 (function angle() {
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || (q.get("v") && !q.get("a"))) return;
-  if (!VARIANTS[(q.get("v") || "").toLowerCase()]) $('[data-v="eyebrow"]').textContent = a.eyebrow;
-  $('[data-v="h1"]').textContent = a.h1; $('[data-v="offer"]').innerHTML = a.offer;
+  const vk = (q.get("v") || "").toLowerCase();
+  if (!VARIANTS[vk]) $('[data-v="eyebrow"]').textContent = a.eyebrow;
+  // 16 Nov: design searches ("pharmacy design", "dental clinic interior design") read the generic design0 hero and a
+  // "Construction" title, and Google scored their landing page below average. Echo the searched words instead.
+  const D = a === ANGLES.design0 && DESIGN_HERO[vk];
+  $('[data-v="h1"]').textContent = D ? D[0] : a.h1; if (D) document.title = D[1];
+  $('[data-v="offer"]').innerHTML = a.offer;
 })();
 
 // 2. The form. One question per step; answers live in the real inputs, so Back never clears anything.
