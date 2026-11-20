@@ -7,6 +7,22 @@ const TRACK = ["gclid", "wbraid", "gbraid", "fbclid", "utm_source", "utm_medium"
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+// 0. CTA test (Sandy 20 Nov: "test different CTAs"). Each visitor gets CTA a or b at random, kept for 90 days.
+// The pick goes into the URL (?cta=) before attribution() reads it, so the Sheet's landing_url column shows which
+// CTA every lead saw. ?cta=a|b in the link forces one (QA). Clarity and GA4 get it too.
+const CTA = {
+  a: { title: "Book your no-cost site assessment", submit: "Book My Site Assessment", btn: "Book My No-Cost Assessment" },
+  b: { title: "Will this space work as a clinic? Ask us.", submit: "Check My Space", btn: "Check My Space" }
+};
+const ctaKey = (function () {
+  const q = new URLSearchParams(location.search); let k = (q.get("cta") || "").toLowerCase();
+  if (!CTA[k]) { try { k = localStorage.getItem("medico_cta") || ""; } catch (e) {} }
+  if (!CTA[k]) k = Math.random() < 0.5 ? "a" : "b";
+  try { localStorage.setItem("medico_cta", k); } catch (e) {}
+  if (q.get("cta") !== k) { q.set("cta", k); try { history.replaceState(null, "", location.pathname + "?" + q + location.hash); } catch (e) {} }
+  return k;
+})();
+
 // 1. Click identifiers, last touch wins: a visit that arrives with any click id or UTM replaces what was stored,
 // so a Google lead is never credited to an older Meta click (or the reverse). Kept 90 days in localStorage so a
 // visitor who comes back later still carries the id that Google/Meta need to match the lead.
@@ -32,6 +48,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     clarity("set", "channel", out.gclid || out.wbraid || out.gbraid || out.utm_source === "google" ? "google"
       : out.fbclid || /facebook|instagram|meta/.test(out.utm_source || "") ? "meta" : out.utm_source || "direct");
     if (out.utm_id) clarity("set", "campaign_id", out.utm_id);
+    clarity("set", "cta", ctaKey);
   }
   const form = $("#lead");
   for (const [k, v] of Object.entries(out)) {
@@ -96,9 +113,32 @@ const VARIANTS = {
 // generic "Build your medical clinic" hero, whatever its promise. The ad id arrives as utm_content, so the hero
 // continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: no-cost site
 // assessment, 100+ clinics. ($0 design fee offer retired by Sandy 9 Nov 2026.)
+// 20 Nov (Sandy: "make sure the creative is matching with the lander"): one angle per Meta creative, so the first
+// screen repeats the ad's own headline, names the projects the ad shows and shows a photo of the same type.
+// own: the angle's eyebrow wins over a ?v= variant's. img/cap: hero photo for that ad. type: clinic type to pre-select.
 const ANGLES = {
-  space: { eyebrow: "Found a space for your clinic? | British Columbia", h1: "Check the space before you sign the lease.",
-    offer: "<b>No-cost site assessment.</b> We check plumbing, electrical, room count and permits before you commit." },
+  space: { eyebrow: "Opening a medical clinic? | British Columbia", h1: "Don't sign the lease until we've walked the unit.", own: 1,
+    offer: "<b>No-cost site assessment.</b> We check plumbing, HVAC, barrier-free entry, room count and permits before you commit." },
+  oneroof: { eyebrow: "Opening a medical clinic? | British Columbia", h1: "Design, permits and build. One team, one roof.", own: 1,
+    offer: "<b>Start with a no-cost site assessment.</b> Then one team designs it, gets the permits and builds it, like Harvard Place Medical Clinic.",
+    img: ["/assets/img/exp-1.webp", "", 900, 600], alt: "Reception and waiting area at Harvard Place Medical Clinic, built by Medico",
+    cap: "<b>Harvard Place Medical Clinic</b> · BC · Medical clinic" },
+  dentalclinic: { eyebrow: "Building out a dental office? | British Columbia", h1: "Any contractor can build an office. We only build clinics.", own: 1,
+    offer: "<b>Plumbing, power and imaging planned around every op.</b> Start with a no-cost site assessment of your space.", type: "Dental" },
+  everyop: { eyebrow: "Building out a dental office? | British Columbia", h1: "Every op planned: plumbing, power and imaging.", own: 1,
+    offer: "<b>Water and vacuum at every chair, power for the equipment, room for imaging.</b> Start with a no-cost site assessment.", type: "Dental" },
+  firstvet: { eyebrow: "Building a vet clinic? | British Columbia", h1: "Is this your contractor's first animal hospital? With Medico, it isn't.", own: 1,
+    offer: "<b>We've built animal hospitals across BC</b>, including Woodland Veterinary Clinic. Start with a no-cost site assessment.",
+    img: ["/assets/img/hero-woodland-front.webp", "/assets/img/hero-woodland-front-960.webp 960w, /assets/img/hero-woodland-front.webp 1600w", 1600, 1067],
+    alt: "Woodland Veterinary Clinic storefront, Vancouver, built by Medico", pos: "50% 0%", cap: "<b>Woodland Veterinary Clinic</b> · Vancouver, BC · Veterinary", type: "Veterinary" },
+  vetrooms: { eyebrow: "For veterinarians | British Columbia", h1: "Every room has its own rules. We know them.", own: 1,
+    offer: "<b>Kennels, treatment, surgery and imaging</b> each need their own plumbing, power and layout. Start with a no-cost site assessment.", type: "Veterinary" },
+  fourvet: { eyebrow: "For veterinarians | British Columbia", h1: "Four animal hospitals. One contractor.", own: 1,
+    offer: "<b>Coquitlam Animal Hospital, Paws on Fraser, Marine &amp; Fraser Vet, Epic Veterinary.</b> Your clinic won't be our first. Start with a no-cost site assessment.", type: "Veterinary" },
+  vetkennels: { eyebrow: "For veterinarians | British Columbia", h1: "A vet clinic isn't an office with kennels added.", own: 1,
+    offer: "<b>We plan it around how you treat patients:</b> procedure lighting, kennel banks, space around the table. Start with a no-cost site assessment.", type: "Veterinary" },
+  catcondo: { eyebrow: "For veterinarians | British Columbia", h1: "Yes, we've built a cat condo.", own: 1,
+    offer: "<b>Custom millwork for the things only animal hospitals need.</b> Start with a no-cost site assessment of your space.", type: "Veterinary" },
   expand: { eyebrow: "Clinic expansion + renovation | British Columbia", h1: "Expanding your clinic? Plan it around your patients.",
     offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment." },
   design0: { eyebrow: "Clinic design + construction | British Columbia", h1: "Design and build your clinic with one team.",
@@ -151,7 +191,14 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   const q = new URLSearchParams(location.search), a = ANGLES[(q.get("a") || AD_ANGLE[q.get("utm_content")] || "").toLowerCase()];
   if (!a || (q.get("v") && !q.get("a"))) return;
   const vk = (q.get("v") || "").toLowerCase();
-  if (!VARIANTS[vk]) $('[data-v="eyebrow"]').textContent = a.eyebrow;
+  if (!VARIANTS[vk] || a.own) $('[data-v="eyebrow"]').textContent = a.eyebrow;
+  if (a.img) {
+    const img = $('[data-v="img"]'); img.src = a.img[0];
+    if (a.img[1]) img.srcset = a.img[1]; else img.removeAttribute("srcset");
+    img.width = a.img[2]; img.height = a.img[3]; img.alt = a.alt; $('[data-v="cap"]').innerHTML = a.cap;
+    if (a.pos) img.style.objectPosition = a.pos;  // keep the clinic's sign in frame
+  }
+  if (a.type) { const t = $(`input[name="clinic_type"][value="${a.type}"]`); if (t) t.checked = true; }
   // 16 Nov: design searches ("pharmacy design", "dental clinic interior design") read the generic design0 hero and a
   // "Construction" title, and Google scored their landing page below average. Echo the searched words instead.
   const D = a === ANGLES.design0 && DESIGN_HERO[vk];
@@ -161,7 +208,14 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
 
 // 2. The form. One question per step; answers live in the real inputs, so Back never clears anything.
 (function form() {
-  const form = $("#lead"), steps = $$(".step", form), bar = $("#fbar"), count = $("#fcount");
+  const form = $("#lead"), bar = $("#fbar"), count = $("#fcount");
+  // 20 Nov: a dental or vet ad already told us the clinic type (pre-selected above), so that question is skipped:
+  // 6 steps instead of 7. The answer is still sent (hidden fieldsets stay in the form data).
+  const steps = $$(".step", form).filter(s => !($('input[name="clinic_type"]', s) && $('input[name="clinic_type"]:checked', s)));
+  $$(".step", form).forEach(s => { if (!steps.includes(s)) s.hidden = true; });
+  const C = CTA[ctaKey];
+  $(".f-title").textContent = C.title;
+  $$("a.btn[data-goform]:not(.ghost)").forEach(b => { b.textContent = C.btn; });
   const back = $("#fback"), next = $("#fnext"), msg = $("#fmsg");
   let i = 0;
 
@@ -205,7 +259,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
     bar.style.width = `${((i + 1) / steps.length) * 100}%`;
     back.hidden = i === 0;
     const last = i === steps.length - 1;
-    next.textContent = last ? "Tell Us About My Clinic" : "Continue";
+    next.textContent = last ? C.submit : "Continue";
     next.type = last ? "submit" : "button";
     // One-tap steps have no Continue: tapping an answer moves on (Sandy, 24 Sep). The button only shows
     // on the contact step, or when the out-of-area note needs reading.
@@ -218,7 +272,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
     if (n > 0 && !reached.has(i)) {
       reached.add(i);
       if (typeof clarity === "function") clarity("event", `form_step_${i + 1}`);
-      if (typeof gtag === "function") gtag("event", "form_progress", { send_to: "G-HSJ06CG134", step: i + 1 });
+      if (typeof gtag === "function") gtag("event", "form_progress", { send_to: "G-HSJ06CG134", step: i + 1, cta: ctaKey });
     }
   }
   const reached = new Set();
@@ -338,12 +392,12 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
         // the redirect; the thank-you page re-sends it with the same transaction_id as a backstop (Google counts it once).
         thanks.gads_tid = data.submitted_at;
         gtag("event", "conversion", { send_to: "AW-716871487/0XCcCLGxyIsdEL-u6tUC", transaction_id: data.submitted_at, transport_type: "beacon", event_callback: go2 });
-        gtag("event", "generate_lead", { send_to: "G-HSJ06CG134", lead_grade: data.lead_grade, clinic_type: data.clinic_type, region: data.region, transport_type: "beacon" });
+        gtag("event", "generate_lead", { send_to: "G-HSJ06CG134", lead_grade: data.lead_grade, clinic_type: data.clinic_type, region: data.region, cta: ctaKey, transport_type: "beacon" });
       }
       setTimeout(go2, 2000); // ad blockers never call back
     } catch (err) {
       msg.textContent = "That didn't send. Please try again, or call 604-644-4120.";
-      next.disabled = false; next.textContent = "Tell Us About My Clinic";
+      next.disabled = false; next.textContent = C.submit;
     }
   });
 
