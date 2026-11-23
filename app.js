@@ -11,7 +11,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 // The pick goes into the URL (?cta=) before attribution() reads it, so the Sheet's landing_url column shows which
 // CTA every lead saw. ?cta=a|b in the link forces one (QA). Clarity and GA4 get it too.
 const CTA = {
-  a: { title: "Book your no-cost site assessment", submit: "Book My Site Assessment", btn: "Book My No-Cost Assessment" },
+  a: { title: "Book your site assessment", submit: "Book My Site Assessment", btn: "Book My Site Assessment" },
   b: { title: "Will this space work as a clinic? Ask us.", submit: "Check My Space", btn: "Check My Space" }
 };
 const ctaKey = (function () {
@@ -111,42 +111,90 @@ const VARIANTS = {
 };
 // Meta angle match (1 Oct 2026, Clarity: 57% of mobile visitors left on the first screen). Every Meta ad landed on the
 // generic "Build your medical clinic" hero, whatever its promise. The ad id arrives as utm_content, so the hero
-// continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: no-cost site
-// assessment, 100+ clinics. ($0 design fee offer retired by Sandy 9 Nov 2026.)
+// continues the ad's own headline. ?a= sets an angle by hand. Claims only from the offer doc: site assessment
+// (never "free"/"no-cost", Sandy 23 Nov), 100+ clinics. ($0 design fee offer retired by Sandy 9 Nov 2026.)
 // 20 Nov (Sandy: "make sure the creative is matching with the lander"): one angle per Meta creative, so the first
 // screen repeats the ad's own headline, names the projects the ad shows and shows a photo of the same type.
 // own: the angle's eyebrow wins over a ?v= variant's. img/cap: hero photo for that ad. type: clinic type to pre-select.
 const ANGLES = {
-  space: { eyebrow: "Opening a medical clinic? | British Columbia", h1: "Don't sign the lease until we've walked the unit.", own: 1,
-    offer: "<b>No-cost site assessment.</b> We check plumbing, HVAC, barrier-free entry, room count and permits before you commit." },
+  space: { eyebrow: "Opening a medical clinic? | British Columbia", h1: "Don't sign the lease until we've walked the space.", own: 1, type: "Medical / Family Practice",
+    offer: "<b>Get a site assessment.</b> We check plumbing, barrier-free entry, room count and permits before you commit." },
   oneroof: { eyebrow: "Opening a medical clinic? | British Columbia", h1: "Design, permits and build. One team, one roof.", own: 1,
-    offer: "<b>Start with a no-cost site assessment.</b> Then one team designs it, gets the permits and builds it, like Harvard Place Medical Clinic.",
+    offer: "<b>Start with a site assessment.</b> Then one team designs it, gets the permits and builds it, like Harvard Place Medical Clinic.",
     img: ["/assets/img/exp-1.webp", "", 900, 600], alt: "Reception and waiting area at Harvard Place Medical Clinic, built by Medico",
-    cap: "<b>Harvard Place Medical Clinic</b> · BC · Medical clinic" },
-  dentalclinic: { eyebrow: "Building out a dental office? | British Columbia", h1: "Any contractor can build an office. We only build clinics.", own: 1,
-    offer: "<b>Plumbing, power and imaging planned around every op.</b> Start with a no-cost site assessment of your space.", type: "Dental" },
+    cap: "<b>Harvard Place Medical Clinic</b> · Vancouver, BC · Medical clinic", type: "Medical / Family Practice" },
+  dentalclinic: { eyebrow: "Building out a dental office? | British Columbia", h1: "Any contractor can build an office. We build clinics.", own: 1,
+    offer: "<b>Plumbing, power and imaging planned around every op.</b> Start with a site assessment of your space. No obligation.", img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> · Surrey, BC · Dental clinic", type: "Dental" },
   everyop: { eyebrow: "Building out a dental office? | British Columbia", h1: "Every op planned: plumbing, power and imaging.", own: 1,
-    offer: "<b>Water and vacuum at every chair, power for the equipment, room for imaging.</b> Start with a no-cost site assessment.", type: "Dental" },
+    offer: "<b>Water and vacuum at every chair, power for the equipment, room for imaging.</b> Start with a site assessment. No obligation.", img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> · Surrey, BC · Dental clinic", type: "Dental" },
   firstvet: { eyebrow: "Building a vet clinic? | British Columbia", h1: "Is this your contractor's first animal hospital? With Medico, it isn't.", own: 1,
-    offer: "<b>We've built animal hospitals across BC</b>, including Woodland Veterinary Clinic. Start with a no-cost site assessment.",
+    offer: "<b>We've built animal hospitals across BC</b>, including Woodland Veterinary Clinic. Start with a site assessment. No obligation.",
     img: ["/assets/img/hero-woodland-front.webp", "/assets/img/hero-woodland-front-960.webp 960w, /assets/img/hero-woodland-front.webp 1600w", 1600, 1067],
     alt: "Woodland Veterinary Clinic storefront, Vancouver, built by Medico", pos: "50% 0%", cap: "<b>Woodland Veterinary Clinic</b> · Vancouver, BC · Veterinary", type: "Veterinary" },
   vetrooms: { eyebrow: "For veterinarians | British Columbia", h1: "Every room has its own rules. We know them.", own: 1,
-    offer: "<b>Kennels, treatment, surgery and imaging</b> each need their own plumbing, power and layout. Start with a no-cost site assessment.", type: "Veterinary" },
+    offer: "<b>Kennels, treatment, procedures and imaging</b> each need their own plumbing, electrical and layout. Start with a site assessment. No obligation.", type: "Veterinary" },
   fourvet: { eyebrow: "For veterinarians | British Columbia", h1: "Four animal hospitals. One contractor.", own: 1,
-    offer: "<b>Coquitlam Animal Hospital, Paws on Fraser, Marine &amp; Fraser Vet, Epic Veterinary.</b> Your clinic won't be our first. Start with a no-cost site assessment.", type: "Veterinary" },
+    offer: "<b>Coquitlam Animal Hospital, Paws on Fraser, Marine &amp; Fraser Veterinary Clinic, EPIC Veterinary Hospital.</b> Your clinic won't be our first. Start with a site assessment. No obligation.", type: "Veterinary" },
   vetkennels: { eyebrow: "For veterinarians | British Columbia", h1: "A vet clinic isn't an office with kennels added.", own: 1,
-    offer: "<b>We plan it around how you treat patients:</b> procedure lighting, kennel banks, space around the table. Start with a no-cost site assessment.", type: "Veterinary" },
+    offer: "<b>We plan it around how you treat patients:</b> procedure lighting, kennel banks, space around the table. Start with a site assessment. No obligation.", type: "Veterinary" },
   catcondo: { eyebrow: "For veterinarians | British Columbia", h1: "Yes, we've built a cat condo.", own: 1,
-    offer: "<b>Custom millwork for the things only animal hospitals need.</b> Start with a no-cost site assessment of your space.", type: "Veterinary" },
+    offer: "<b>Custom millwork for the things only animal hospitals need.</b> Start with a site assessment of your space. No obligation.",
+    img: ["/assets/img/ad-epic15.webp", "/assets/img/ad-epic15-960.webp 960w, /assets/img/ad-epic15.webp 1600w", 1600, 1066], alt: "Cat condo millwork at EPIC Veterinary Hospital, built by Medico", cap: "<b>EPIC Veterinary Hospital</b> \u00b7 Richmond, BC \u00b7 Veterinary", type: "Veterinary" },
+  // 24 Nov 2026 (Sandy: every creative matches its lander): one angle per round-2 static (261123_*), headline = the
+  // ad's own headline, photo = the same Medico clinic the ad shows. V2a and V2b share v_number (CTA test is in the ad).
+  d_space: { eyebrow: "Dentists looking at a new space | British Columbia", h1: "The space looks perfect. Will it work for your operatories?", own: 1,
+    offer: "<b>Find out before you sign.</b> A Medico project specialist looks at your space and flags what could change your layout, cost or opening plans. No obligation.",
+    img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> \u00b7 Surrey, BC \u00b7 Dental clinic", type: "Dental" },
+  d_equip: { eyebrow: "Dentists planning a build out | British Columbia", h1: "Pick your equipment, then plan the rooms.", own: 1,
+    offer: "<b>Room layouts built around your workflow and equipment</b>, with plumbing and electrical planned around treatment requirements. Talk it through with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> \u00b7 Surrey, BC \u00b7 Dental clinic", type: "Dental" },
+  d_quote: { eyebrow: "Dentists comparing contractor quotes | British Columbia", h1: "Will this quote still hold halfway through the build?", own: 1,
+    offer: "<b>With Medico, your quote doesn't move on you mid-project.</b> We lock in fixed pricing with our suppliers upfront. Talk through your space and plans with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> \u00b7 Surrey, BC \u00b7 Dental clinic", type: "Dental" },
+  d_faq: { eyebrow: "For dentists | British Columbia", h1: "Have you built a dental clinic? Yes: Smile Plus Dentistry.", own: 1,
+    offer: "<b>2,840 sq. ft., designed and built by Medico.</b> We specialize in healthcare, with 100+ clinics built. Talk through your space and plans with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-sp.webp", "/assets/img/ad-sp-960.webp 960w, /assets/img/ad-sp.webp 1600w", 1600, 1066], alt: "Reception at Smile Plus Dentistry, designed and built by Medico", cap: "<b>Smile Plus Dentistry</b> \u00b7 Surrey, BC \u00b7 Dental clinic", type: "Dental" },
+  m_lease: { eyebrow: "Doctors negotiating a clinic lease | British Columbia", h1: "Negotiating a lease? Bring Medico in before you sign.", own: 1,
+    offer: "<b>We can help identify issues</b> that could affect layout, construction cost or your opening timeline. Talk through your space and plans with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-cs02.webp", "/assets/img/ad-cs02-960.webp 960w, /assets/img/ad-cs02.webp 1600w", 1600, 1066], alt: "Reception at Cornerstone Pediatric, built by Medico", cap: "<b>Cornerstone Pediatric</b> \u00b7 Langley, BC \u00b7 Medical clinic", type: "Medical / Family Practice" },
+  m_privacy: { eyebrow: "Family doctors opening a clinic | British Columbia", h1: "Will patients hear the next exam room?", own: 1,
+    offer: "<b>Exam rooms designed with privacy in mind</b>, before construction begins. Get a site assessment: a Medico project specialist flags what could change your layout, cost or opening plans. No obligation.",
+    img: ["/assets/img/ad-cs09.webp", "/assets/img/ad-cs09-960.webp 960w, /assets/img/ad-cs09.webp 1600w", 1600, 1066], alt: "Exam room at Cornerstone Pediatric, built by Medico", cap: "<b>Cornerstone Pediatric</b> \u00b7 Langley, BC \u00b7 Medical clinic", type: "Medical / Family Practice" },
+  m_small: { eyebrow: "Doctors with under 1,500 sq. ft. | British Columbia", h1: "Can 1,000 sq. ft. really fit a clinic?", own: 1,
+    offer: "<b>Cornerstone Pediatric is a 1,000 sq. ft. clinic</b>, planned for patient flow from check-in through consultation. Get a site assessment of your space. No obligation.",
+    img: ["/assets/img/ad-cs01.webp", "/assets/img/ad-cs01-960.webp 960w, /assets/img/ad-cs01.webp 1600w", 1600, 1066], alt: "Reception at Cornerstone Pediatric, a 1,000 sq. ft. clinic built by Medico", cap: "<b>Cornerstone Pediatric</b> \u00b7 Langley, BC \u00b7 Medical clinic", type: "Medical / Family Practice" },
+  m_layout: { eyebrow: "Doctors planning a clinic | British Columbia", h1: "There's no best clinic layout. There's the one that fits.", own: 1,
+    offer: "<b>Your patients, your staff, your space.</b> We design it with you, then build it. Talk through your plans with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-cs03.webp", "/assets/img/ad-cs03-960.webp 960w, /assets/img/ad-cs03.webp 1600w", 1600, 1066], alt: "Reception at Cornerstone Pediatric, built by Medico", cap: "<b>Cornerstone Pediatric</b> \u00b7 Langley, BC \u00b7 Medical clinic", type: "Medical / Family Practice" },
+  o_lane: { eyebrow: "Optometrists setting up exam lanes | British Columbia", h1: "How long does your exam lane need to be?", own: 1,
+    offer: "<b>It depends on your space and your equipment.</b> We assess the space with you before you commit. Talk it through with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-mo01.webp", "/assets/img/ad-mo01-960.webp 960w, /assets/img/ad-mo01.webp 1600w", 1600, 1066], alt: "Inside Mishe Optometry, built by Medico", cap: "<b>Mishe Optometry</b> \u00b7 Surrey, BC \u00b7 Optometry clinic", type: "Optometry / Eye care" },
+  o_quote: { eyebrow: "For optometrists | British Columbia", h1: "Don't pick your contractor by the lowest quote.", own: 1,
+    offer: "<b>Start with one who has built optometry clinics before. Medico has</b>, including Mishe Optometry and White Rock Optometry. Talk through your space with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-wr01.webp", "/assets/img/ad-wr01-960.webp 960w, /assets/img/ad-wr01.webp 1600w", 1600, 1066], alt: "Inside White Rock Optometry, built by Medico", cap: "<b>White Rock Optometry</b> \u00b7 White Rock, BC \u00b7 Optometry clinic", type: "Optometry / Eye care" },
+  o_tworoads: { eyebrow: "Optometrists planning a build out | British Columbia", h1: "Two ways to build out an optometry clinic.", own: 1,
+    offer: "<b>Coordinate a designer, an engineer and a contractor yourself, or have Medico design it, handle the permits and build it.</b> Get a site assessment of your space. No obligation.",
+    img: ["/assets/img/ad-mo05.webp", "/assets/img/ad-mo05-960.webp 960w, /assets/img/ad-mo05.webp 1600w", 1600, 1066], alt: "Frame display at Mishe Optometry, built by Medico", cap: "<b>Mishe Optometry</b> \u00b7 Surrey, BC \u00b7 Optometry clinic", type: "Optometry / Eye care" },
+  v_space: { eyebrow: "Vets looking at a space | British Columbia", h1: "Will this space work as a vet hospital?", own: 1,
+    offer: "<b>Before you commit to it, Medico can look at the layout, plumbing and electrical with you.</b> Talk through your space with a Medico project specialist. No obligation.",
+    img: ["/assets/img/ad-ca04.webp", "/assets/img/ad-ca04-960.webp 960w, /assets/img/ad-ca04.webp 1600w", 1600, 1066], alt: "Inside Coquitlam Animal Hospital, built by Medico", cap: "<b>Coquitlam Animal Hospital</b> \u00b7 Coquitlam, BC \u00b7 Veterinary", type: "Veterinary" },
+  v_number: { eyebrow: "Vets planning a clinic or hospital | British Columbia", h1: "Know your number before you start.", own: 1,
+    offer: "<b>Whatever your number is, we've likely already worked with it.</b> We'll give you a real one, not a guess, and fixed supplier pricing keeps it steady. No obligation.",
+    img: ["/assets/img/ad-ca03.webp", "/assets/img/ad-ca03-960.webp 960w, /assets/img/ad-ca03.webp 1600w", 1600, 1066], alt: "Reception at Coquitlam Animal Hospital, built by Medico", cap: "<b>Coquitlam Animal Hospital</b> \u00b7 Coquitlam, BC \u00b7 Veterinary", type: "Veterinary" },
+  v_quote: { eyebrow: "Vets getting contractor quotes | British Columbia", h1: "Does your quote cover what a vet hospital needs?", own: 1,
+    offer: "<b>Imaging and specialized-room requirements, plumbing and electrical planned around treatment.</b> Medico accounts for them early. No obligation.",
+    img: ["/assets/img/ad-ca04.webp", "/assets/img/ad-ca04-960.webp 960w, /assets/img/ad-ca04.webp 1600w", 1600, 1066], alt: "Inside Coquitlam Animal Hospital, built by Medico", cap: "<b>Coquitlam Animal Hospital</b> \u00b7 Coquitlam, BC \u00b7 Veterinary", type: "Veterinary" },
+  v_size: { eyebrow: "Vets planning a new clinic | British Columbia", h1: "How big should a vet clinic be?", own: 1,
+    offer: "<b>Big enough for your exam rooms, treatment rooms and staff rooms.</b> Medico lays it out around your workflow from the first plan. Get a site assessment. No obligation.",
+    img: ["/assets/img/ad-ca05.webp", "/assets/img/ad-ca05-960.webp 960w, /assets/img/ad-ca05.webp 1600w", 1600, 1066], alt: "Inside Coquitlam Animal Hospital, built by Medico", cap: "<b>Coquitlam Animal Hospital</b> \u00b7 Coquitlam, BC \u00b7 Veterinary", type: "Veterinary" },
   expand: { eyebrow: "Clinic expansion + renovation | British Columbia", h1: "Expanding your clinic? Plan it around your patients.",
-    offer: "<b>Adding rooms or a second location?</b> Start with a no-cost site assessment." },
+    offer: "<b>Adding rooms or a second location?</b> Start with a site assessment. No obligation." },
   design0: { eyebrow: "Clinic design + construction | British Columbia", h1: "Design and build your clinic with one team.",
-    offer: "<b>Layout, permit drawings and construction, planned together.</b> Start with a no-cost site assessment of your space." },
+    offer: "<b>Layout, permit drawings and construction, planned together.</b> Start with a site assessment of your space. No obligation." },
   newclinic: { eyebrow: "Opening a new clinic? | British Columbia", h1: "Opening a new clinic? Get the plan right before you build.",
-    offer: "<b>Before you sign, approve a layout or start construction:</b> a no-cost site assessment." },
+    offer: "<b>Before you sign, approve a layout or start construction:</b> get a site assessment. No obligation." },
   plan: { eyebrow: "Still planning your clinic build? | British Columbia", h1: "Know what your clinic involves before you build.",
-    offer: "<b>Not sure of the budget yet?</b> Start with a no-cost site assessment of the space, your clinic type and equipment." }
+    offer: "<b>Not sure of the budget yet?</b> Start with a site assessment of the space, your clinic type and equipment. No obligation." }
 };
 const DESIGN_HERO = {
   medical: ["Medical clinic design and build, by one team.", "Medical Clinic Design + Build in BC | Medico Construction & Design"],
