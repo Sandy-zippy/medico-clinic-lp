@@ -8,7 +8,7 @@
 // that category's own page (m/<cat>/, tools/mpages.py) with every parameter kept. Runs before any tag loads, so the
 // pixel, GA and Clarity count the visit once, on the category page. Google traffic and general ads stay here.
 (function(){try{var q=new URLSearchParams(location.search),v=(q.get("v")||"").toLowerCase(),a=(q.get("a")||"").toLowerCase();
-if(!q.get("fbclid")&&!/^(facebook|fb|ig|instagram|meta|an)$/i.test(q.get("utm_source")||""))return;
+if(!q.get("fbclid")&&!/^(facebook|fb|ig|instagram|meta|an)$/i.test(q.get("utm_source")||"")&&!/(facebook|instagram)\.com/i.test(document.referrer))return;
 var V={vet:"vet",dental:"dental",optometry:"optometry"},A={vet:/^(v_|firstvet|vetrooms|fourvet|vetkennels|catcondo)/,dental:/^(d_|dentalclinic|everyop)/,optometry:/^o_/,medical:/^(m_|space$|oneroof$)/},c=V[v];
 if(!c&&!v)for(var k in A)if(A[k].test(a)){c=k;break}
 if(c)location.replace("m/"+c+"/"+location.search+location.hash)}catch(e){}})();
