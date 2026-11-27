@@ -216,6 +216,14 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
   "6924515235479": "newclinic", "6924515274479": "newclinic", "6924515310879": "newclinic", "6924515391679": "newclinic", "6924515495879": "newclinic", "6924515554879": "newclinic" };
 (function variant() {
   // Google keyword pages (/g/<slug>/, built by tools/gpages.py) carry their own title, eyebrow and h1 in the HTML.
+  // 27 Nov: Meta category pages (/m/<cat>/, built by tools/mpages.py) carry their own photo, copy and proof in the
+  // HTML. They only need the page key and the clinic type pre-selected (so the form skips that question).
+  const M = document.documentElement.dataset.mv;
+  if (M) {
+    $("#pagev").value = M;
+    const t = $(`input[name="clinic_type"][value="${document.documentElement.dataset.mtype}"]`); if (t) t.checked = true;
+    return;
+  }
   const G = document.documentElement.dataset.gv;
   const key = (G || new URLSearchParams(location.search).get("v") || "").toLowerCase();
   const v = VARIANTS[key]; if (!v) return;
@@ -461,6 +469,7 @@ const AD_ANGLE = { "6920259109079": "space", "6920259104679": "expand", "6920259
 
 // 3. Sticky mobile CTA: appears once the form has scrolled out of view, hides while the form is on screen.
 (function sticky() {
+  if (document.documentElement.dataset.mv) return; // category pages run their own (m/m.js)
   const bar = $("#stick"), target = $("#start");
   if (!bar || !("IntersectionObserver" in window)) return;
   // Shown once the form is above the screen; hidden again while the final call-to-action (which has the
