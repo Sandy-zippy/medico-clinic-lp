@@ -2,6 +2,9 @@
    everything else is new. Brand: #1475bc, #404041, Montserrat 700 + Open Sans 400 only. Built 27 Nov 2026. */
 @font-face{font-family:"Montserrat";src:url(/assets/fonts/montserrat-700.woff2) format("woff2");font-weight:700;font-display:swap}
 @font-face{font-family:"Open Sans";src:url(/assets/fonts/opensans-400.woff2) format("woff2");font-weight:400;font-display:swap}
+/* metric-matched fallbacks: text keeps its size while the web fonts load, so long headlines don't re-wrap and push the page down (CLS 0.22 on d_quote at 1440 before this) */
+@font-face{font-family:"Montserrat Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:112.83%;ascent-override:85.79%;descent-override:22.25%;line-gap-override:0%}
+@font-face{font-family:"Open Sans Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:105.94%;ascent-override:101.18%;descent-override:27.73%;line-gap-override:0%}
 
 :root{
   --blue:#1475bc; --blue-d:#0f5f9a; --blue-t:#eaf2fa;
@@ -9,8 +12,8 @@
   --radius:10px; --radius-l:14px;
   --max:1200px; --pad:24px;
   --sec:96px;
-  --h:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --b:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --h:"Montserrat","Montserrat Fallback",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --b:"Open Sans","Open Sans Fallback",system-ui,-apple-system,"Segoe UI",sans-serif;
   --shadow:0 1px 2px rgba(30,40,55,.06),0 8px 24px rgba(30,40,55,.07);
 }
 *,*::before,*::after{box-sizing:border-box}

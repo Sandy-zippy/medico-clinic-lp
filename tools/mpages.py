@@ -206,6 +206,14 @@ def angles_for(ctype):
     return json.dumps(keep, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
 
 
+def ad_angle_map():
+    """app.js AD_ANGLE (Meta ad id in utm_content -> angle), so ads without ?a= get their angle before first paint too."""
+    import json, subprocess
+    js = open(os.path.join(ROOT, "app.js")).read()
+    lit = js[js.index("const AD_ANGLE = ") + len("const AD_ANGLE = "):].split("};", 1)[0] + "}"
+    return json.dumps(json.loads(subprocess.check_output(["node", "-e", f"process.stdout.write(JSON.stringify({lit}))"])), separators=(",", ":"))
+
+
 # ---------------------------------------------------------------------------------------------------------------
 # v2 (27 Nov 2026 PM), rebuilt with the HQ landing-page chain (landing-page-build + sabri-structure, direct-response,
 # copy-engine module-landing-page + gate-icp-language, impeccable). Build log: medico/lp-meta-2026-11-27/BUILD-LOG.md.
@@ -326,6 +334,7 @@ def page(key, c):
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/medico-favicon-192.png">
 <link rel="preload" href="/assets/fonts/montserrat-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/opensans-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/m/m.css">
 {TRACK}</head>
 <body>
@@ -361,7 +370,7 @@ def page(key, c):
   </div>
 </section>
 <script>/* Ad angle before first paint, so the visitor never sees the default headline or photo flip to the ad's. */
-(function(){{var A={angles_for(c["type"])},q=new URLSearchParams(location.search),a=A[(q.get("a")||"").toLowerCase()];
+(function(){{var A={angles_for(c["type"])},q=new URLSearchParams(location.search),D={ad_angle_map()},a=A[(q.get("a")||(q.get("v")?"":D[q.get("utm_content")])||"").toLowerCase()];
 var $=function(s){{return document.querySelector('[data-v="'+s+'"]')}},im=$("img");
 if(!a||!a.img){{im.srcset=im.dataset.srcset;im.src=im.dataset.src}}if(!a)return;
 if(a.h1)$("h1").textContent=a.h1;if(a.offer)$("offer").innerHTML=a.offer;
@@ -420,7 +429,7 @@ if(a.img){{var i=im;i.src=a.img[0];i.alt=a.alt||"";if(a.pos)i.style.objectPositi
     <div class="card formcard" id="start">
       <div class="f-top"><p class="f-title">Book your site assessment</p><p class="f-count" id="fcount" aria-live="polite">Step 1 of 6</p></div>
       <div class="f-bar" aria-hidden="true"><i id="fbar"></i></div>
-      {FORM}
+      {FORM.replace('name="page" value="medical"', f'name="page" value="{key}"')}
       <div class="f-foot"><span>Takes about 60 seconds</span><a href="/privacy.html">Privacy policy</a></div>
     </div>
   </div>

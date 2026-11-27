@@ -13,6 +13,12 @@
     opt.closest("label").click();                       // app.js auto-advances to step 2 and logs form_step_2
     if (typeof clarity === "function") clarity("event", "hero_answer");
     setTimeout(() => { $("#start").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }, 120);
+    // keyboard and screen-reader users land on the next question (app.js advances after 260 ms)
+    setTimeout(() => {
+      const q = $$("#lead .step").find(s => !s.hidden && s.offsetParent);
+      const f = q && $("input:not([type=hidden]),button", q);
+      if (f) f.focus({ preventScroll: true });
+    }, 450);
   }));
 
   if (!("IntersectionObserver" in window)) { $$(".arrive").forEach(s => s.classList.add("in")); return; }
