@@ -194,6 +194,18 @@ FORM = HEAD_TAGS[HEAD_TAGS.index('<form id="lead"'):HEAD_TAGS.index("</form>") +
 SYMBOLS = HEAD_TAGS[HEAD_TAGS.index('<svg width="0"'):HEAD_TAGS.index("</svg>", HEAD_TAGS.index('<svg width="0"')) + 6]
 
 
+def angles_for(ctype):
+    """The Meta ad angles (?a=) from app.js, as JSON, for an inline script that applies them before first paint.
+    app.js applies the same angle again after load (same values), so the two can never disagree."""
+    import json, subprocess
+    js = open(os.path.join(ROOT, "app.js")).read()
+    lit = js[js.index("const ANGLES = ") + len("const ANGLES = "):js.index("const DESIGN_HERO")].strip().rstrip(";")
+    data = json.loads(subprocess.check_output(["node", "-e", f"process.stdout.write(JSON.stringify({lit}))"]))
+    keep = {k: {f: v[f] for f in ("eyebrow", "h1", "offer", "img", "alt", "cap", "pos") if f in v}
+            for k, v in data.items() if v.get("type") in (ctype, None)}
+    return json.dumps(keep, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
+
+
 def page(key, c):
     hk, halt, hcap = c["hero"]
     rooms = "\n".join(
@@ -228,7 +240,6 @@ def page(key, c):
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/medico-favicon-192.png">
 <link rel="preload" href="/assets/fonts/montserrat-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/assets/m/{hk}-1280.webp" imagesrcset="/assets/m/{hk}-720.webp 720w, /assets/m/{hk}-1280.webp 1280w" imagesizes="(max-width:700px) 100vw, 50vw">
 <link rel="stylesheet" href="/m/m.css">
 {TRACK}</head>
 <body>
@@ -246,7 +257,8 @@ def page(key, c):
 <section class="hero">
   <div class="wrap hgrid">
     <figure class="hshot">
-      <img data-v="img" src="/assets/m/{hk}-1280.webp" srcset="/assets/m/{hk}-720.webp 720w, /assets/m/{hk}-1280.webp 1280w" sizes="(max-width:900px) 100vw, 50vw" width="1280" height="853" alt="{E(halt)}" fetchpriority="high">
+      <img data-v="img" data-src="/assets/m/{hk}-1280.webp" data-srcset="/assets/m/{hk}-720.webp 720w, /assets/m/{hk}-1280.webp 1280w" sizes="(max-width:900px) 100vw, 50vw" width="1280" height="853" alt="{E(halt)}" fetchpriority="high">
+      <noscript><img src="/assets/m/{hk}-1280.webp" width="1280" height="853" alt="{E(halt)}"></noscript>
       <figcaption data-v="cap">{hcap}</figcaption>
     </figure>
     <div class="htext">
@@ -261,6 +273,12 @@ def page(key, c):
     </div>
   </div>
 </section>
+<script>/* Ad angle before first paint, so the visitor never sees the default headline or photo flip to the ad's. */
+(function(){{var A={angles_for(c["type"])},q=new URLSearchParams(location.search),a=A[(q.get("a")||"").toLowerCase()];
+var $=function(s){{return document.querySelector('[data-v="'+s+'"]')}},im=$("img");
+if(!a||!a.img){{im.srcset=im.dataset.srcset;im.src=im.dataset.src}}if(!a)return;
+if(a.eyebrow)$("eyebrow").textContent=a.eyebrow;if(a.h1)$("h1").textContent=a.h1;if(a.offer)$("offer").innerHTML=a.offer;
+if(a.img){{var i=im;i.src=a.img[0];i.alt=a.alt||"";if(a.pos)i.style.objectPosition=a.pos;$("cap").innerHTML=a.cap||""}}}})();</script>
 
 <section class="sec">
   <div class="wrap">

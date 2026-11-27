@@ -210,11 +210,13 @@ p{margin:0}
   .hero{padding:0 0 44px;background:#fff}
   .hero .wrap{padding:0}
   .hgrid{grid-template-columns:1fr;gap:0}
-  .hshot{order:0;border-radius:0;box-shadow:none;aspect-ratio:3/2}
-  .htext{padding:22px 16px 0}
-  .htext h1{font-size:30px;line-height:1.12}
-  .sub{font-size:17px;margin-top:14px}
-  .hcta{margin-top:20px;gap:12px}
+  .hshot{order:0;border-radius:0;box-shadow:none;aspect-ratio:16/9}
+  .hshot figcaption{padding:24px 16px 8px;font-size:12px}
+  .htext{padding:16px 16px 0}
+  .htext .eyebrow{font-size:11px;margin-bottom:8px}
+  .htext h1{font-size:27px;line-height:1.12}
+  .sub{font-size:16px;line-height:1.5;margin-top:10px}
+  .hcta{margin-top:16px;gap:10px}
   .hcta .btn{width:100%}
   .hcta .tel{width:100%;text-align:center}
   .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}

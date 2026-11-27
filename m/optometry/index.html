@@ -8,7 +8,6 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/medico-favicon-192.png">
 <link rel="preload" href="/assets/fonts/montserrat-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/assets/m/o-hero-1280.webp" imagesrcset="/assets/m/o-hero-720.webp 720w, /assets/m/o-hero-1280.webp 1280w" imagesizes="(max-width:700px) 100vw, 50vw">
 <link rel="stylesheet" href="/m/m.css">
 <!-- Google Ads tag (Medico account 711-193-7872). The lead conversion fires from app.js on a successful send only. -->
 <!-- Loader is the account's Google tag GT-NCTZ3T2L: gtag/js?id=AW-716871487 returns 404 (checked 30 Sep 2026). -->
@@ -41,7 +40,8 @@
 <section class="hero">
   <div class="wrap hgrid">
     <figure class="hshot">
-      <img data-v="img" src="/assets/m/o-hero-1280.webp" srcset="/assets/m/o-hero-720.webp 720w, /assets/m/o-hero-1280.webp 1280w" sizes="(max-width:900px) 100vw, 50vw" width="1280" height="853" alt="Reception and dispensary at White Rock Optometry, built by Medico" fetchpriority="high">
+      <img data-v="img" data-src="/assets/m/o-hero-1280.webp" data-srcset="/assets/m/o-hero-720.webp 720w, /assets/m/o-hero-1280.webp 1280w" sizes="(max-width:900px) 100vw, 50vw" width="1280" height="853" alt="Reception and dispensary at White Rock Optometry, built by Medico" fetchpriority="high">
+      <noscript><img src="/assets/m/o-hero-1280.webp" width="1280" height="853" alt="Reception and dispensary at White Rock Optometry, built by Medico"></noscript>
       <figcaption data-v="cap"><b>White Rock Optometry</b> · White Rock, BC · 4,492 sq ft</figcaption>
     </figure>
     <div class="htext">
@@ -60,6 +60,12 @@
     </div>
   </div>
 </section>
+<script>/* Ad angle before first paint, so the visitor never sees the default headline or photo flip to the ad's. */
+(function(){var A={"o_lane":{"eyebrow":"Optometrists setting up exam lanes | British Columbia","h1":"How long does your exam lane need to be?","offer":"<b>It depends on your space and your equipment.<\/b> We assess the space with you before you commit. Talk it through with a Medico project specialist. No obligation.","img":["/assets/img/ad-mo19.webp","/assets/img/ad-mo19-960.webp 960w, /assets/img/ad-mo19.webp 1600w",1600,1066],"alt":"Exam lane with phoropter and slit lamp at Mishe Optometry, built by Medico","cap":"<b>Mishe Optometry<\/b> · Surrey, BC · Optometry clinic"},"o_quote":{"eyebrow":"For optometrists | British Columbia","h1":"Don't pick your contractor by the lowest quote.","offer":"<b>Start with one who has built optometry clinics before. Medico has<\/b>, including Mishe Optometry and White Rock Optometry. Talk through your space with a Medico project specialist. No obligation.","img":["/assets/img/ad-wr07.webp","/assets/img/ad-wr07-960.webp 960w, /assets/img/ad-wr07.webp 1600w",1600,1066],"alt":"Frame display cases at White Rock Optometry, built by Medico","cap":"<b>White Rock Optometry<\/b> · White Rock, BC · Optometry clinic"},"o_tworoads":{"eyebrow":"Optometrists planning a build out | British Columbia","h1":"Two ways to build out an optometry clinic.","offer":"<b>Coordinate a designer, an engineer and a contractor yourself, or have Medico design it, handle the permits and build it.<\/b> Get a site assessment of your space. No obligation.","img":["/assets/img/ad-mo05.webp","/assets/img/ad-mo05-960.webp 960w, /assets/img/ad-mo05.webp 1600w",1600,1066],"alt":"Frame display at Mishe Optometry, built by Medico","cap":"<b>Mishe Optometry<\/b> · Surrey, BC · Optometry clinic"},"expand":{"eyebrow":"Clinic expansion + renovation | British Columbia","h1":"Expanding your clinic? Plan it around your patients.","offer":"<b>Adding rooms or a second location?<\/b> Start with a site assessment. No obligation."},"design0":{"eyebrow":"Clinic design + construction | British Columbia","h1":"Design and build your clinic with one team.","offer":"<b>Layout, permit drawings and construction, planned together.<\/b> Start with a site assessment of your space. No obligation."},"newclinic":{"eyebrow":"Opening a new clinic? | British Columbia","h1":"Opening a new clinic? Get the plan right before you build.","offer":"<b>Before you sign, approve a layout or start construction:<\/b> get a site assessment. No obligation."},"plan":{"eyebrow":"Still planning your clinic build? | British Columbia","h1":"Know what your clinic involves before you build.","offer":"<b>Not sure of the budget yet?<\/b> Start with a site assessment of the space, your clinic type and equipment. No obligation."}},q=new URLSearchParams(location.search),a=A[(q.get("a")||"").toLowerCase()];
+var $=function(s){return document.querySelector('[data-v="'+s+'"]')},im=$("img");
+if(!a||!a.img){im.srcset=im.dataset.srcset;im.src=im.dataset.src}if(!a)return;
+if(a.eyebrow)$("eyebrow").textContent=a.eyebrow;if(a.h1)$("h1").textContent=a.h1;if(a.offer)$("offer").innerHTML=a.offer;
+if(a.img){var i=im;i.src=a.img[0];i.alt=a.alt||"";if(a.pos)i.style.objectPosition=a.pos;$("cap").innerHTML=a.cap||""}})();</script>
 
 <section class="sec">
   <div class="wrap">
